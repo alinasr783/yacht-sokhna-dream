@@ -14,6 +14,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { Anchor, Plus, Edit, Trash2, ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
+import { ImageUpload } from '@/components/ImageUpload';
 
 interface Yacht {
   id: string;
@@ -50,7 +51,8 @@ const AdminYachtsPage = () => {
     features_en: '',
     features_ar: '',
     price: '',
-    location_id: ''
+    location_id: '',
+    images: [] as string[]
   });
 
   useEffect(() => {
@@ -134,7 +136,8 @@ const AdminYachtsPage = () => {
         features_en: '',
         features_ar: '',
         price: '',
-        location_id: ''
+        location_id: '',
+        images: []
       });
       fetchYachts();
     } catch (error) {
@@ -157,7 +160,8 @@ const AdminYachtsPage = () => {
       features_en: yacht.features_en || '',
       features_ar: yacht.features_ar || '',
       price: yacht.price?.toString() || '',
-      location_id: yacht.location_id || ''
+      location_id: yacht.location_id || '',
+      images: []
     });
     setIsDialogOpen(true);
   };
@@ -194,7 +198,7 @@ const AdminYachtsPage = () => {
     return (
       <div className="min-h-screen bg-background">
         <Header />
-        <div className="pt-20 pb-20">
+        <div className="pb-20">
           <div className="container mx-auto px-4">
             <div className="animate-pulse">
               <div className="bg-muted h-8 rounded mb-4"></div>
@@ -214,7 +218,7 @@ const AdminYachtsPage = () => {
     <div className="min-h-screen bg-background">
       <Header />
       
-      <div className="pt-20 pb-20">
+      <div className="pb-20">
         <div className="container mx-auto px-4">
           {/* Header */}
           <div className={`flex items-center justify-between mb-8 ${isRTL ? 'flex-row-reverse' : ''}`}>
@@ -248,7 +252,8 @@ const AdminYachtsPage = () => {
                       features_en: '',
                       features_ar: '',
                       price: '',
-                      location_id: ''
+                      location_id: '',
+                      images: []
                     });
                   }}
                 >
@@ -357,6 +362,14 @@ const AdminYachtsPage = () => {
                       </Select>
                     </div>
                   </div>
+
+                  <ImageUpload
+                    bucketName="yacht-images"
+                    entityType="yacht"
+                    onImagesChange={(imageUrls) => setFormData({...formData, images: imageUrls})}
+                    initialImages={formData.images}
+                    maxImages={8}
+                  />
 
                   <div className={`flex gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
                     <Button type="submit">

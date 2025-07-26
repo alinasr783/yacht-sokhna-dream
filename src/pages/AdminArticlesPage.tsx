@@ -13,6 +13,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { BookOpen, Plus, Edit, Trash2, ArrowLeft, Calendar } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
+import { ImageUpload } from '@/components/ImageUpload';
 
 interface Article {
   id: string;
@@ -37,7 +38,8 @@ const AdminArticlesPage = () => {
     title_ar: '',
     content_en: '',
     content_ar: '',
-    image_url: ''
+    image_url: '',
+    images: [] as string[]
   });
 
   useEffect(() => {
@@ -102,7 +104,8 @@ const AdminArticlesPage = () => {
         title_ar: '',
         content_en: '',
         content_ar: '',
-        image_url: ''
+        image_url: '',
+        images: []
       });
       fetchArticles();
     } catch (error) {
@@ -122,7 +125,8 @@ const AdminArticlesPage = () => {
       title_ar: article.title_ar,
       content_en: article.content_en,
       content_ar: article.content_ar,
-      image_url: article.image_url || ''
+      image_url: article.image_url || '',
+      images: []
     });
     setIsDialogOpen(true);
   };
@@ -168,7 +172,7 @@ const AdminArticlesPage = () => {
     return (
       <div className="min-h-screen bg-background">
         <Header />
-        <div className="pt-20 pb-20">
+        <div className="pb-20">
           <div className="container mx-auto px-4">
             <div className="animate-pulse">
               <div className="bg-muted h-8 rounded mb-4"></div>
@@ -188,7 +192,7 @@ const AdminArticlesPage = () => {
     <div className="min-h-screen bg-background">
       <Header />
       
-      <div className="pt-20 pb-20">
+      <div className="pb-20">
         <div className="container mx-auto px-4">
           {/* Header */}
           <div className={`flex items-center justify-between mb-8 ${isRTL ? 'flex-row-reverse' : ''}`}>
@@ -219,7 +223,8 @@ const AdminArticlesPage = () => {
                       title_ar: '',
                       content_en: '',
                       content_ar: '',
-                      image_url: ''
+                      image_url: '',
+                      images: []
                     });
                   }}
                 >
@@ -291,6 +296,14 @@ const AdminArticlesPage = () => {
                       />
                     </div>
                   </div>
+
+                  <ImageUpload
+                    bucketName="article-images"
+                    entityType="article"
+                    onImagesChange={(imageUrls) => setFormData({...formData, images: imageUrls})}
+                    initialImages={formData.images}
+                    maxImages={5}
+                  />
 
                   <div className={`flex gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
                     <Button type="submit">

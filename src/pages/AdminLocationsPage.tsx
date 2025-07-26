@@ -13,6 +13,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { MapPin, Plus, Edit, Trash2, ArrowLeft, ExternalLink } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
+import { ImageUpload } from '@/components/ImageUpload';
 
 interface Location {
   id: string;
@@ -36,7 +37,8 @@ const AdminLocationsPage = () => {
     name_ar: '',
     description_en: '',
     description_ar: '',
-    google_maps_link: ''
+    google_maps_link: '',
+    images: [] as string[]
   });
 
   useEffect(() => {
@@ -101,7 +103,8 @@ const AdminLocationsPage = () => {
         name_ar: '',
         description_en: '',
         description_ar: '',
-        google_maps_link: ''
+        google_maps_link: '',
+        images: []
       });
       fetchLocations();
     } catch (error) {
@@ -121,7 +124,8 @@ const AdminLocationsPage = () => {
       name_ar: location.name_ar,
       description_en: location.description_en || '',
       description_ar: location.description_ar || '',
-      google_maps_link: location.google_maps_link || ''
+      google_maps_link: location.google_maps_link || '',
+      images: []
     });
     setIsDialogOpen(true);
   };
@@ -158,7 +162,7 @@ const AdminLocationsPage = () => {
     return (
       <div className="min-h-screen bg-background">
         <Header />
-        <div className="pt-20 pb-20">
+        <div className="pb-20">
           <div className="container mx-auto px-4">
             <div className="animate-pulse">
               <div className="bg-muted h-8 rounded mb-4"></div>
@@ -178,7 +182,7 @@ const AdminLocationsPage = () => {
     <div className="min-h-screen bg-background">
       <Header />
       
-      <div className="pt-20 pb-20">
+      <div className="pb-20">
         <div className="container mx-auto px-4">
           {/* Header */}
           <div className={`flex items-center justify-between mb-8 ${isRTL ? 'flex-row-reverse' : ''}`}>
@@ -209,7 +213,8 @@ const AdminLocationsPage = () => {
                       name_ar: '',
                       description_en: '',
                       description_ar: '',
-                      google_maps_link: ''
+                      google_maps_link: '',
+                      images: []
                     });
                   }}
                 >
@@ -279,6 +284,14 @@ const AdminLocationsPage = () => {
                       placeholder="https://maps.google.com/..."
                     />
                   </div>
+
+                  <ImageUpload
+                    bucketName="location-images"
+                    entityType="location"
+                    onImagesChange={(imageUrls) => setFormData({...formData, images: imageUrls})}
+                    initialImages={formData.images}
+                    maxImages={6}
+                  />
 
                   <div className={`flex gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
                     <Button type="submit">

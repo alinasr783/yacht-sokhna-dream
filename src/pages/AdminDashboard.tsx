@@ -46,7 +46,7 @@ const AdminDashboard = () => {
     <div className="min-h-screen bg-background">
       <Header />
       
-      <div className="pt-20 pb-20">
+      <div className="pb-20">
         <div className="container mx-auto px-4">
           {/* Header */}
           <div className={`flex items-center justify-between mb-12 ${isRTL ? 'flex-row-reverse' : ''}`}>

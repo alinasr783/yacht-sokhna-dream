@@ -69,7 +69,7 @@ const AdminLoginPage = () => {
     <div className="min-h-screen bg-background">
       <Header />
       
-      <div className="pt-20 pb-20">
+      <div className="pb-20">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-center min-h-[calc(100vh-200px)]">
             <Card className="w-full max-w-md shadow-luxury">

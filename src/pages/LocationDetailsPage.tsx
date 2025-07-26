@@ -116,7 +116,7 @@ const LocationDetailsPage = () => {
     <div className="min-h-screen bg-background">
       <Header />
       
-      <div className="pt-20">
+      <div className="pb-4">
         {/* Back Button */}
         <div className="container mx-auto px-4 py-4">
           <Link to="/locations">
