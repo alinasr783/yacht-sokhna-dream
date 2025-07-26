@@ -6,7 +6,7 @@ import { LocationCard } from '@/components/LocationCard';
 import { Button } from '@/components/ui/button';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { supabase } from '@/integrations/supabase/client';
-import heroImage from '@/assets/hero-yacht.jpg';
+import heroImage from '@/assets/hero-yacht-sunset.jpg';
 import { Anchor, MapPin } from 'lucide-react';
 
 interface Yacht {
@@ -77,12 +77,12 @@ const Index = () => {
       <Header />
       
       {/* Hero Section - Account for fixed header */}
-      <section className="relative h-screen flex items-center justify-center overflow-hidden mt-16">{/* mt-16 للهيدر الثابت */}
+      <section className="relative h-screen flex items-center justify-center overflow-hidden mt-16">
         <div 
           className="absolute inset-0 bg-cover bg-center"
           style={{ backgroundImage: `url(${heroImage})` }}
         >
-          <div className="absolute inset-0 bg-gradient-hero/60"></div>
+          <div className="absolute inset-0 bg-black/40"></div>
         </div>
         
         <div className="relative z-10 text-center text-primary-foreground px-4">

@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { supabase } from '@/integrations/supabase/client';
 import { ArrowLeft, BookOpen, Calendar, Share2 } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 
 interface ArticleDetails {
   id: string;
@@ -20,6 +21,7 @@ interface ArticleDetails {
 const ArticleDetailsPage = () => {
   const { id } = useParams<{ id: string }>();
   const { t, language, isRTL } = useLanguage();
+  const { toast } = useToast();
   const [article, setArticle] = useState<ArticleDetails | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -45,18 +47,29 @@ const ArticleDetailsPage = () => {
     fetchArticle();
   }, [id]);
 
-  const handleShare = () => {
+  const handleShare = async () => {
     if (navigator.share && article) {
       const title = language === 'ar' ? article.title_ar : article.title_en;
-      navigator.share({
-        title: title,
-        text: title,
-        url: window.location.href,
-      });
+      try {
+        await navigator.share({
+          title: title,
+          text: title,
+          url: window.location.href,
+        });
+      } catch (error) {
+        console.log('Share cancelled');
+      }
     } else {
       // Fallback to copying URL
-      navigator.clipboard.writeText(window.location.href);
-      // You could add a toast notification here
+      try {
+        await navigator.clipboard.writeText(window.location.href);
+        toast({
+          title: t('article.linkCopied', 'Link Copied!', 'تم نسخ الرابط!'),
+          description: t('article.linkCopiedDesc', 'Article link copied to clipboard', 'تم نسخ رابط المقال إلى الحافظة'),
+        });
+      } catch (error) {
+        console.error('Failed to copy link:', error);
+      }
     }
   };
 

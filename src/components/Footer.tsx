@@ -19,11 +19,6 @@ export const Footer = () => {
                 'تجارب يخوت فاخرة في المياه النقية للعين السخنة'
               )}
             </p>
-            <Link to="/admin">
-              <Button variant="hero" size="sm">
-                {t('footer.admin', 'Are you the admin?', 'هل أنت المدير؟')}
-              </Button>
-            </Link>
           </div>
 
           {/* Contact Info */}
@@ -61,6 +56,9 @@ export const Footer = () => {
               </Link>
               <Link to="/articles" className="block hover:text-accent transition-colors">
                 {t('footer.articles', 'Articles', 'المقالات')}
+              </Link>
+              <Link to="/admin" className="block hover:text-accent transition-colors text-xs opacity-40">
+                ⚙️
               </Link>
             </div>
           </div>
