@@ -76,8 +76,8 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       <Header />
       
-      {/* Hero Section */}
-      <section className="relative h-screen flex items-center justify-center overflow-hidden">
+      {/* Hero Section - Account for fixed header */}
+      <section className="relative h-screen flex items-center justify-center overflow-hidden mt-16">{/* mt-16 للهيدر الثابت */}
         <div 
           className="absolute inset-0 bg-cover bg-center"
           style={{ backgroundImage: `url(${heroImage})` }}
