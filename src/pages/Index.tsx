@@ -6,8 +6,9 @@ import { LocationCard } from '@/components/LocationCard';
 import { Button } from '@/components/ui/button';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { supabase } from '@/integrations/supabase/client';
-import heroImage from '@/assets/hero-yacht-sunset.jpg';
+import heroImage from '@/assets/hero-video-still.jpg';
 import { Anchor, MapPin } from 'lucide-react';
+import { YachtLoader } from '@/components/ui/loading-spinner';
 
 interface Yacht {
   id: string;
@@ -76,29 +77,47 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       <Header />
       
-      {/* Hero Section - Account for fixed header */}
-      <section className="relative h-screen flex items-center justify-center overflow-hidden mt-16">
-        <div 
-          className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: `url(${heroImage})` }}
-        >
-          <div className="absolute inset-0 bg-black/40"></div>
+      {/* Hero Section */}
+      <section className="relative h-screen flex items-center justify-center overflow-hidden">
+        {/* Animated Background */}
+        <div className="absolute inset-0">
+          <div 
+            className="absolute inset-0 bg-cover bg-center animate-[slowFloat_20s_ease-in-out_infinite]"
+            style={{ backgroundImage: `url(${heroImage})` }}
+          >
+            <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-black/30 to-black/50"></div>
+          </div>
+          
+          {/* Floating particles effect */}
+          <div className="absolute inset-0 overflow-hidden">
+            {[...Array(6)].map((_, i) => (
+              <div
+                key={i}
+                className="absolute w-2 h-2 bg-primary/20 rounded-full animate-[float_6s_ease-in-out_infinite]"
+                style={{
+                  left: `${Math.random() * 100}%`,
+                  top: `${Math.random() * 100}%`,
+                  animationDelay: `${i * 0.5}s`
+                }}
+              />
+            ))}
+          </div>
         </div>
         
         <div className="relative z-10 text-center text-primary-foreground px-4">
-          <h1 className="text-5xl md:text-7xl font-bold mb-6 animate-fade-in-up">
-            ELSOKHNA
+          <h1 className="text-5xl md:text-7xl font-bold mb-6 animate-fade-in">
+            {t('siteName', 'ELSOKHNA YACHTS', 'يخوت العين السخنة')}
           </h1>
-          <h2 className="text-2xl md:text-4xl mb-8 animate-fade-in-up">
+          <h2 className="text-2xl md:text-4xl mb-8 animate-fade-in" style={{animationDelay: '0.2s'}}>
             {t('hero.subtitle', 'Luxury Yacht Experiences', 'تجارب يخوت فاخرة')}
           </h2>
-          <p className="text-lg md:text-xl mb-8 max-w-2xl mx-auto animate-fade-in-up">
+          <p className="text-lg md:text-xl mb-8 max-w-2xl mx-auto animate-fade-in" style={{animationDelay: '0.4s'}}>
             {t('hero.description', 
               'Discover the pristine waters of El Sokhna with our premium yacht collection',
               'اكتشف المياه النقية للعين السخنة مع مجموعة اليخوت المميزة لدينا'
             )}
           </p>
-          <div className="space-x-4 animate-fade-in-up">
+          <div className="space-x-4 animate-fade-in" style={{animationDelay: '0.6s'}}>
             <Button variant="hero" size="xl">
               {t('hero.exploreYachts', 'Explore Yachts', 'استكشف اليخوت')}
             </Button>
@@ -128,14 +147,8 @@ const Index = () => {
           </div>
 
           {loading ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {[...Array(6)].map((_, i) => (
-                <div key={i} className="animate-pulse">
-                  <div className="bg-muted h-64 rounded-lg mb-4"></div>
-                  <div className="bg-muted h-4 rounded mb-2"></div>
-                  <div className="bg-muted h-4 rounded w-3/4"></div>
-                </div>
-              ))}
+            <div className="flex justify-center py-20">
+              <YachtLoader size="lg" />
             </div>
           ) : yachts.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -176,14 +189,8 @@ const Index = () => {
           </div>
 
           {loading ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {[...Array(6)].map((_, i) => (
-                <div key={i} className="animate-pulse">
-                  <div className="bg-muted h-48 rounded-lg mb-4"></div>
-                  <div className="bg-muted h-4 rounded mb-2"></div>
-                  <div className="bg-muted h-4 rounded w-2/3"></div>
-                </div>
-              ))}
+            <div className="flex justify-center py-20">
+              <YachtLoader size="lg" />
             </div>
           ) : locations.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">

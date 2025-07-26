@@ -125,4 +125,21 @@ All colors MUST be HSL.
   body {
     @apply bg-background text-foreground;
   }
+
+  /* Custom animations */
+  @keyframes slowFloat {
+    0%, 100% { transform: scale(1) rotate(0deg); }
+    50% { transform: scale(1.02) rotate(0.5deg); }
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-10px) rotate(180deg); }
+  }
+
+  @keyframes draw {
+    0% { stroke-dashoffset: 31.416; }
+    50% { stroke-dashoffset: 0; }
+    100% { stroke-dashoffset: -31.416; }
+  }
 }

@@ -8,6 +8,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { supabase } from '@/integrations/supabase/client';
 import { Search, BookOpen, Calendar, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { YachtLoader } from '@/components/ui/loading-spinner';
 
 interface Article {
   id: string;
@@ -118,7 +119,7 @@ const ArticlesPage = () => {
                 const excerpt = content.length > 150 ? content.substring(0, 150) + '...' : content;
 
                 return (
-                  <Card key={article.id} className="group overflow-hidden shadow-card hover:shadow-ocean transition-all duration-500 animate-fade-in-up">
+                  <Card key={article.id} className="group overflow-hidden shadow-card hover:shadow-ocean transition-all duration-500 animate-fade-in hover:scale-[1.02]" style={{animationDelay: `${0.1 * (filteredArticles.indexOf(article) % 3)}s`}}>
                     {/* Article Image */}
                     <div className="relative overflow-hidden">
                       {article.image_url ? (

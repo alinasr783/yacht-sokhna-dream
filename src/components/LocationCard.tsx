@@ -61,7 +61,7 @@ export const LocationCard = ({ location, yachtCount }: LocationCardProps) => {
               <Button
                 variant="outline"
                 onClick={handleMapClick}
-                className="flex items-center gap-2"
+                className="flex items-center gap-2 text-primary border-primary"
               >
                 <ExternalLink className="h-4 w-4" />
                 {t('location.openMap', 'Open Map', 'فتح الخريطة')}
