@@ -57,8 +57,8 @@ export const Footer = () => {
               <Link to="/articles" className="block hover:text-accent transition-colors">
                 {t('footer.articles', 'Articles', 'المقالات')}
               </Link>
-              <Link to="/admin" className="block hover:text-accent transition-colors text-xs opacity-40">
-                ⚙️
+              <Link to="/admin" className="block hover:text-accent transition-colors text-xs opacity-60">
+                {t('footer.adminLink', 'Are you the admin?', 'هل أنت المشرف؟')}
               </Link>
             </div>
           </div>
