@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { Button } from './ui/button';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { Globe, Menu, X, User } from 'lucide-react';
+import { Globe, Menu, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import logo from '@/assets/logo.png';
+import logo from '@/assets/logo-yacht.png';
 
 export const Header = () => {
   const { language, setLanguage, t, isRTL } = useLanguage();
@@ -52,9 +52,8 @@ export const Header = () => {
             ))}
           </nav>
 
-          {/* Language Toggle & Admin Access */}
+          {/* Language Toggle */}
           <div className={`flex items-center ${isRTL ? 'space-x-reverse space-x-3' : 'space-x-3'}`}>
-            {/* Language Toggle */}
             <Button
               variant="ghost"
               size="sm"
@@ -67,13 +66,6 @@ export const Header = () => {
                 {language === 'en' ? 'العربية' : 'English'}
               </span>
             </Button>
-
-            {/* Subtle Admin Access */}
-            <Link to="/admin">
-              <Button variant="ghost" size="sm" className="opacity-60 hover:opacity-100 transition-opacity">
-                <User className="h-4 w-4" />
-              </Button>
-            </Link>
 
             {/* Mobile Menu Button */}
             <Button
