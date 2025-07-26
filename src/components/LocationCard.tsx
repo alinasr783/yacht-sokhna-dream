@@ -59,9 +59,9 @@ export const LocationCard = ({ location, yachtCount }: LocationCardProps) => {
             
             {location.google_maps_link && (
               <Button
-                variant="outline"
+                variant="ghost"
                 onClick={handleMapClick}
-                className="flex items-center gap-2 text-primary border-primary"
+                className="flex items-center gap-2 text-primary"
               >
                 <ExternalLink className="h-4 w-4" />
                 {t('location.openMap', 'Open Map', 'فتح الخريطة')}

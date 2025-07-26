@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { supabase } from '@/integrations/supabase/client';
 import { Search, Anchor } from 'lucide-react';
+import yachtsHeroImage from '@/assets/yachts-page-hero.jpg';
 
 interface Yacht {
   id: string;
@@ -67,8 +68,14 @@ const YachtsPage = () => {
       <Header />
       
       {/* Page Header */}
-      <section className="relative bg-gradient-ocean text-primary-foreground py-20 mt-16">
-        <div className="container mx-auto px-4 text-center">
+      <section className="relative h-96 flex items-center justify-center overflow-hidden">
+        <div 
+          className="absolute inset-0 bg-cover bg-center"
+          style={{ backgroundImage: `url(${yachtsHeroImage})` }}
+        >
+          <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-black/70"></div>
+        </div>
+        <div className="relative z-10 container mx-auto px-4 text-center text-primary-foreground">
           <div className="flex items-center justify-center mb-6">
             <Anchor className="h-12 w-12 mr-4" />
             <h1 className={`text-4xl md:text-6xl font-bold ${isRTL ? 'text-right' : 'text-left'}`}>

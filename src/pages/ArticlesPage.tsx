@@ -9,6 +9,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { Search, BookOpen, Calendar, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { YachtLoader } from '@/components/ui/loading-spinner';
+import articlesHeroImage from '@/assets/articles-page-hero.jpg';
 
 interface Article {
   id: string;
@@ -68,8 +69,14 @@ const ArticlesPage = () => {
       <Header />
       
       {/* Page Header */}
-      <section className="relative bg-gradient-luxury text-primary-foreground py-20 mt-16">
-        <div className="container mx-auto px-4 text-center">
+      <section className="relative h-96 flex items-center justify-center overflow-hidden">
+        <div 
+          className="absolute inset-0 bg-cover bg-center"
+          style={{ backgroundImage: `url(${articlesHeroImage})` }}
+        >
+          <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-black/70"></div>
+        </div>
+        <div className="relative z-10 container mx-auto px-4 text-center text-primary-foreground">
           <div className="flex items-center justify-center mb-6">
             <BookOpen className="h-12 w-12 mr-4" />
             <h1 className={`text-4xl md:text-6xl font-bold ${isRTL ? 'text-right' : 'text-left'}`}>
