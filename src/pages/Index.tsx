@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { supabase } from '@/integrations/supabase/client';
 import heroImage from '@/assets/hero-video-still.jpg';
-import { Anchor, MapPin } from 'lucide-react';
+import { Anchor, MapPin, FileText } from 'lucide-react';
 import { YachtLoader } from '@/components/ui/loading-spinner';
 
 interface Yacht {
@@ -36,10 +36,21 @@ interface Location {
   google_maps_link?: string;
 }
 
+interface Article {
+  id: string;
+  title_en: string;
+  title_ar: string;
+  content_en: string;
+  content_ar: string;
+  image_url?: string;
+  created_at: string;
+}
+
 const Index = () => {
   const { t } = useLanguage();
   const [yachts, setYachts] = useState<Yacht[]>([]);
   const [locations, setLocations] = useState<Location[]>([]);
+  const [articles, setArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -61,8 +72,16 @@ const Index = () => {
           .select('*')
           .limit(6);
 
+        // Fetch articles
+        const { data: articlesData } = await supabase
+          .from('articles')
+          .select('*')
+          .order('created_at', { ascending: false })
+          .limit(3);
+
         setYachts(yachtsData || []);
         setLocations(locationsData || []);
+        setArticles(articlesData || []);
       } catch (error) {
         console.error('Error fetching data:', error);
       } finally {
@@ -121,7 +140,7 @@ const Index = () => {
             <Button variant="hero" size="xl" asChild>
               <a href="/yachts">{t('hero.exploreYachts', 'Explore Yachts', 'استكشف اليخوت')}</a>
             </Button>
-            <Button variant="outline" size="xl" className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary" asChild>
+            <Button variant="outline" size="xl" className="border-primary-foreground text-blue-500 bg-transparent hover:bg-transparent hover:text-blue-500" asChild>
               <a href="/locations">{t('hero.viewLocations', 'View Locations', 'عرض المواقع')}</a>
             </Button>
           </div>
@@ -205,6 +224,80 @@ const Index = () => {
               </p>
             </div>
           )}
+        </div>
+      </section>
+
+      {/* Articles Section */}
+      <section className="py-20 bg-background">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <div className="flex items-center justify-center mb-4">
+              <FileText className="h-8 w-8 text-primary mr-2" />
+              <h2 className="text-4xl font-bold text-foreground">
+                {t('articles.title', 'Latest Articles', 'أحدث المقالات')}
+              </h2>
+            </div>
+            <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+              {t('articles.description', 
+                'Discover yacht tips, destinations, and maritime lifestyle',
+                'اكتشف نصائح اليخوت والوجهات وأسلوب الحياة البحري'
+              )}
+            </p>
+          </div>
+
+          {loading ? (
+            <div className="flex justify-center py-20">
+              <YachtLoader size="lg" />
+            </div>
+          ) : articles.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {articles.map((article) => (
+                <div key={article.id} className="bg-card rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
+                  {article.image_url && (
+                    <div className="aspect-video bg-muted">
+                      <img 
+                        src={article.image_url} 
+                        alt={t('articleImage', article.title_en, article.title_ar)}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  )}
+                  <div className="p-6">
+                    <h3 className="text-xl font-semibold mb-3 text-foreground">
+                      {t('articleTitle', article.title_en, article.title_ar)}
+                    </h3>
+                    <p className="text-muted-foreground mb-4 line-clamp-3">
+                      {t('articleContent', article.content_en, article.content_ar).substring(0, 150)}...
+                    </p>
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-muted-foreground">
+                        {new Date(article.created_at).toLocaleDateString()}
+                      </span>
+                      <Button variant="outline" size="sm" asChild>
+                        <a href={`/article/${article.id}`}>
+                          {t('readMore', 'Read More', 'اقرأ المزيد')}
+                        </a>
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-12">
+              <p className="text-muted-foreground">
+                {t('articles.noArticles', 'No articles available at the moment', 'لا توجد مقالات متاحة في الوقت الحالي')}
+              </p>
+            </div>
+          )}
+
+          <div className="text-center mt-12">
+            <Button variant="outline" asChild>
+              <a href="/articles">
+                {t('articles.viewAll', 'View All Articles', 'عرض جميع المقالات')}
+              </a>
+            </Button>
+          </div>
         </div>
       </section>
 
