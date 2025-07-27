@@ -35,6 +35,7 @@ const AppRoutes = () => {
       <Route path="/articles" element={<ArticlesPage />} />
       <Route path="/article/:id" element={<ArticleDetailsPage />} />
       <Route path="/admin" element={adminSession ? <AdminDashboard /> : <AdminLoginPage />} />
+      <Route path="/admin/dashboard" element={adminSession ? <AdminDashboard /> : <AdminLoginPage />} />
       <Route path="/admin/yachts" element={adminSession ? <AdminYachtsPage /> : <AdminLoginPage />} />
       <Route path="/admin/locations" element={adminSession ? <AdminLocationsPage /> : <AdminLoginPage />} />
       <Route path="/admin/articles" element={adminSession ? <AdminArticlesPage /> : <AdminLoginPage />} />

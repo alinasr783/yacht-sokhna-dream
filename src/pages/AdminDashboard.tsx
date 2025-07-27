@@ -10,11 +10,13 @@ import { Link } from 'react-router-dom';
 
 const AdminDashboard = () => {
   const { t, isRTL } = useLanguage();
-  const { adminSession, logout, requireAuth } = useAdminAuth();
+  const { adminSession, loading, logout, requireAuth } = useAdminAuth();
 
   useEffect(() => {
-    requireAuth();
-  }, [requireAuth]);
+    if (!loading) {
+      requireAuth();
+    }
+  }, [loading, requireAuth]);
 
   if (!adminSession) return null;
 
