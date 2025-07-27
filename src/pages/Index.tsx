@@ -140,7 +140,7 @@ const Index = () => {
             <Button variant="hero" size="xl" asChild>
               <a href="/yachts">{t('hero.exploreYachts', 'Explore Yachts', 'استكشف اليخوت')}</a>
             </Button>
-            <Button variant="outline" size="xl" className="border-primary-foreground text-blue-500 bg-transparent hover:bg-transparent hover:text-blue-500" asChild>
+            <Button variant="outline" size="xl" className="bg-white text-blue-600 border-white hover:bg-white hover:text-blue-700 font-semibold" asChild>
               <a href="/locations">{t('hero.viewLocations', 'View Locations', 'عرض المواقع')}</a>
             </Button>
           </div>
