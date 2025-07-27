@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
+import { ImageGallery } from '@/components/ImageGallery';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -34,7 +35,6 @@ const YachtDetailsPage = () => {
   const { t, language, isRTL } = useLanguage();
   const [yacht, setYacht] = useState<YachtDetails | null>(null);
   const [loading, setLoading] = useState(true);
-  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
   useEffect(() => {
     const fetchYacht = async () => {
@@ -141,41 +141,7 @@ const YachtDetailsPage = () => {
 
         {/* Yacht Images */}
         <section className="container mx-auto px-4 mb-12">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Main Image */}
-            <div className="lg:col-span-2">
-              {images.length > 0 ? (
-                <img
-                  src={images[selectedImageIndex]?.image_url || primaryImage?.image_url}
-                  alt={yachtName}
-                  className="w-full h-96 lg:h-[500px] object-cover rounded-lg shadow-ocean"
-                />
-              ) : (
-                <div className="w-full h-96 lg:h-[500px] bg-gradient-ocean flex items-center justify-center rounded-lg">
-                  <span className="text-primary-foreground text-xl font-semibold">
-                    {t('yacht.noImage', 'No Image Available', 'لا توجد صورة متاحة')}
-                  </span>
-                </div>
-              )}
-            </div>
-
-            {/* Image Thumbnails */}
-            {images.length > 1 && (
-              <div className="space-y-4">
-                {images.slice(0, 4).map((image, index) => (
-                  <img
-                    key={index}
-                    src={image.image_url}
-                    alt={`${yachtName} ${index + 1}`}
-                    className={`w-full h-24 object-cover rounded-lg cursor-pointer transition-all ${
-                      selectedImageIndex === index ? 'ring-2 ring-primary' : 'hover:opacity-80'
-                    }`}
-                    onClick={() => setSelectedImageIndex(index)}
-                  />
-                ))}
-              </div>
-            )}
-          </div>
+          <ImageGallery images={images} title={yachtName} />
         </section>
 
         {/* Yacht Details */}

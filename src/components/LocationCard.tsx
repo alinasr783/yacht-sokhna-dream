@@ -45,14 +45,14 @@ export const LocationCard = ({ location, yachtCount }: LocationCardProps) => {
       <CardContent className="p-6">
         <div className="space-y-4">
           {locationDescription && (
-            <p className="text-muted-foreground text-sm">
+            <p className="text-muted-foreground text-sm leading-relaxed">
               {locationDescription}
             </p>
           )}
 
-          <div className="flex flex-col sm:flex-row gap-2">
+          <div className="flex flex-col sm:flex-row gap-3">
             <Link to={`/location/${location.id}`} className="flex-1">
-              <Button variant="ocean" className="w-full">
+              <Button variant="ocean" className="w-full text-sm font-medium">
                 {t('location.viewYachts', 'View Yachts', 'عرض اليخوت')}
               </Button>
             </Link>
@@ -61,7 +61,7 @@ export const LocationCard = ({ location, yachtCount }: LocationCardProps) => {
               <Button
                 variant="ghost"
                 onClick={handleMapClick}
-                className="flex items-center gap-2 text-primary"
+                className="flex items-center gap-2 text-blue-600 hover:text-blue-600 hover:bg-transparent text-sm"
               >
                 <ExternalLink className="h-4 w-4" />
                 {t('location.openMap', 'Open Map', 'فتح الخريطة')}

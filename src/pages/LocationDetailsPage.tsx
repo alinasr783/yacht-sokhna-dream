@@ -128,17 +128,18 @@ const LocationDetailsPage = () => {
         </div>
 
         {/* Location Header */}
-        <section className="relative bg-gradient-sunset text-primary-foreground py-20">
-          <div className="container mx-auto px-4 text-center">
-            <div className="flex items-center justify-center mb-6">
-              <MapPin className="h-12 w-12 mr-4" />
-              <h1 className={`text-4xl md:text-6xl font-bold ${isRTL ? 'text-right' : 'text-left'}`}>
+        <section className="relative bg-gradient-to-br from-primary to-primary-dark text-primary-foreground py-24">
+          <div className="absolute inset-0 bg-black/20"></div>
+          <div className="relative container mx-auto px-4 text-center">
+            <div className="flex items-center justify-center mb-8">
+              <MapPin className="h-16 w-16 mr-4 text-white" />
+              <h1 className={`text-5xl md:text-7xl font-bold ${isRTL ? 'text-right' : 'text-left'} text-white`}>
                 {locationName}
               </h1>
             </div>
             
             {locationDescription && (
-              <p className="text-xl max-w-3xl mx-auto mb-8">
+              <p className="text-xl md:text-2xl max-w-4xl mx-auto mb-10 text-white/90 leading-relaxed">
                 {locationDescription}
               </p>
             )}
@@ -148,7 +149,7 @@ const LocationDetailsPage = () => {
                 onClick={() => window.open(location.google_maps_link, '_blank')}
                 variant="hero"
                 size="lg"
-                className="mr-4"
+                className="bg-white/20 backdrop-blur-sm border-white/30 text-white hover:bg-white/30"
               >
                 <ExternalLink className="h-5 w-5 mr-2" />
                 {t('location.openInMaps', 'Open in Google Maps', 'افتح في خرائط جوجل')}

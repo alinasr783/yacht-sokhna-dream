@@ -117,12 +117,12 @@ const Index = () => {
               'اكتشف المياه النقية للعين السخنة مع مجموعة اليخوت المميزة لدينا'
             )}
           </p>
-          <div className="space-x-4 animate-fade-in" style={{animationDelay: '0.6s'}}>
-            <Button variant="hero" size="xl">
-              {t('hero.exploreYachts', 'Explore Yachts', 'استكشف اليخوت')}
+          <div className="flex flex-col sm:flex-row gap-4 animate-fade-in justify-center" style={{animationDelay: '0.6s'}}>
+            <Button variant="hero" size="xl" asChild>
+              <a href="/yachts">{t('hero.exploreYachts', 'Explore Yachts', 'استكشف اليخوت')}</a>
             </Button>
-            <Button variant="outline" size="xl" className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary">
-              {t('hero.viewLocations', 'View Locations', 'عرض المواقع')}
+            <Button variant="outline" size="xl" className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary" asChild>
+              <a href="/locations">{t('hero.viewLocations', 'View Locations', 'عرض المواقع')}</a>
             </Button>
           </div>
         </div>

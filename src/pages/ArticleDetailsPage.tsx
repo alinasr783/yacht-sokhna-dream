@@ -150,12 +150,13 @@ const ArticleDetailsPage = () => {
           <header className="mb-12">
             {/* Article Image */}
             {article.image_url && (
-              <div className="mb-8">
+              <div className="mb-8 relative overflow-hidden rounded-xl">
                 <img
                   src={article.image_url}
                   alt={title}
-                  className="w-full h-64 md:h-96 object-cover rounded-lg shadow-ocean"
+                  className="w-full h-64 md:h-[500px] object-cover shadow-ocean transition-transform duration-500 hover:scale-105"
                 />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
               </div>
             )}
 

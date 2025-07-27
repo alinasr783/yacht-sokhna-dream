@@ -75,26 +75,29 @@ const LocationsPage = () => {
       <Header />
       
       {/* Page Header */}
-      <section className="relative h-96 flex items-center justify-center overflow-hidden">
+      <section className="relative h-[500px] flex items-center justify-center overflow-hidden">
         <div 
           className="absolute inset-0 bg-cover bg-center"
           style={{ backgroundImage: `url(${locationsHeroImage})` }}
         >
-          <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-black/70"></div>
+          <div className="absolute inset-0 bg-gradient-to-br from-black/80 via-black/60 to-black/80"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-primary/30 to-transparent"></div>
         </div>
-        <div className="relative z-10 container mx-auto px-4 text-center text-primary-foreground">
-          <div className="flex items-center justify-center mb-6">
-            <MapPin className="h-12 w-12 mr-4" />
-            <h1 className={`text-4xl md:text-6xl font-bold ${isRTL ? 'text-right' : 'text-left'}`}>
-              {t('locations.pageTitle', 'Premium Locations', 'المواقع المميزة')}
-            </h1>
+        <div className="relative z-10 container mx-auto px-4 text-center text-white">
+          <div className="max-w-4xl mx-auto">
+            <div className="flex items-center justify-center mb-8">
+              <MapPin className="h-16 w-16 mr-4 text-white" />
+              <h1 className={`text-5xl md:text-7xl font-bold ${isRTL ? 'text-right' : 'text-left'}`}>
+                {t('locations.pageTitle', 'Premium Locations', 'المواقع المميزة')}
+              </h1>
+            </div>
+            <p className="text-xl md:text-2xl max-w-4xl mx-auto mb-8 leading-relaxed text-white/90">
+              {t('locations.pageDescription', 
+                'Explore the most beautiful and exclusive yacht destinations around El Sokhna, each offering unique experiences and breathtaking views',
+                'استكشف أجمل وأحصر وجهات اليخوت حول العين السخنة، كل منها يقدم تجارب فريدة ومناظر خلابة'
+              )}
+            </p>
           </div>
-          <p className="text-xl max-w-3xl mx-auto mb-8">
-            {t('locations.pageDescription', 
-              'Explore the most beautiful and exclusive yacht destinations around El Sokhna, each offering unique experiences and breathtaking views',
-              'استكشف أجمل وأحصر وجهات اليخوت حول العين السخنة، كل منها يقدم تجارب فريدة ومناظر خلابة'
-            )}
-          </p>
           
           {/* Search Bar */}
           <div className="max-w-md mx-auto relative">
