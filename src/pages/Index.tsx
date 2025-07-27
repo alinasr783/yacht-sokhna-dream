@@ -6,7 +6,7 @@ import { LocationCard } from '@/components/LocationCard';
 import { Button } from '@/components/ui/button';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { supabase } from '@/integrations/supabase/client';
-import heroImage from '@/assets/hero-video-still.jpg';
+import heroImage from '@/assets/hero-yacht-blue.jpg';
 import { Anchor, MapPin, FileText } from 'lucide-react';
 import { YachtLoader } from '@/components/ui/loading-spinner';
 

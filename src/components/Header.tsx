@@ -26,7 +26,7 @@ export const Header = () => {
         <div className={`flex items-center justify-between h-16 ${isRTL ? 'flex-row-reverse' : ''}`}>
           {/* Logo */}
           <Link to="/" className={`flex items-center gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
-            <img src={logo} alt="ELSOKHNA YACHTS" className="h-8 w-8 md:h-10 md:w-10" />
+            <img src={logo} alt="ELSOKHNA YACHTS" className="h-8 w-8 md:h-10 md:w-10 rounded-full" />
             <div className={`${isRTL ? 'text-right' : 'text-left'}`}>
               <div className="text-sm md:text-lg font-bold bg-gradient-ocean bg-clip-text text-transparent leading-tight">
                 <span className="block sm:inline">ELSOKHNA</span>{' '}

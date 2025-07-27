@@ -14,7 +14,7 @@ export const Footer = () => {
           {/* Brand */}
           <div className="space-y-4">
             <div className="flex items-center gap-3">
-              <img src={logo} alt="ELSOKHNA YACHTS" className="h-8 w-8" />
+              <img src={logo} alt="ELSOKHNA YACHTS" className="h-8 w-8 rounded-full" />
               <div className="text-2xl font-bold">
                 ELSOKHNA <span className="text-accent font-extrabold">YACHTS</span>
               </div>
