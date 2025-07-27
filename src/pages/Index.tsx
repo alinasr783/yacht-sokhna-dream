@@ -154,7 +154,7 @@ const Index = () => {
             <div className="flex items-center justify-center mb-4">
               <Anchor className="h-8 w-8 text-primary mr-2" />
               <h2 className="text-4xl font-bold text-foreground">
-                {t('yachts.title', 'Available Yachts', 'اليخوت المتاحة')}
+                {t('yachts.title', 'Our Favorite Yachts', 'يخوتنا المفضلة')}
               </h2>
             </div>
             <p className="text-muted-foreground text-lg max-w-2xl mx-auto">

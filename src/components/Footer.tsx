@@ -2,6 +2,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from './ui/button';
 import { Link } from 'react-router-dom';
 import { MapPin, Phone, Mail } from 'lucide-react';
+import logo from '@/assets/logo-yacht.png';
 
 export const Footer = () => {
   const { t } = useLanguage();
@@ -12,7 +13,12 @@ export const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Brand */}
           <div className="space-y-4">
-            <div className="text-2xl font-bold">ELSOKHNA</div>
+            <div className="flex items-center gap-3">
+              <img src={logo} alt="ELSOKHNA YACHTS" className="h-8 w-8" />
+              <div className="text-2xl font-bold">
+                ELSOKHNA <span className="text-accent font-extrabold">YACHTS</span>
+              </div>
+            </div>
             <p className="text-primary-foreground/80">
               {t('footer.description', 
                 'Luxury yacht experiences in the pristine waters of El Sokhna',
@@ -65,7 +71,7 @@ export const Footer = () => {
         </div>
 
         <div className="border-t border-primary-foreground/20 mt-8 pt-8 text-center text-primary-foreground/60">
-          <p>&copy; 2024 ELSOKHNA. {t('footer.rights', 'All rights reserved.', 'جميع الحقوق محفوظة.')}</p>
+          <p>&copy; 2024 ELSOKHNA YACHTS. {t('footer.rights', 'All rights reserved.', 'جميع الحقوق محفوظة.')}</p>
         </div>
       </div>
     </footer>

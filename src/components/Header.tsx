@@ -25,11 +25,12 @@ export const Header = () => {
       <div className="container mx-auto px-4">
         <div className={`flex items-center justify-between h-16 ${isRTL ? 'flex-row-reverse' : ''}`}>
           {/* Logo */}
-          <Link to="/" className={`flex items-center gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
-            <img src={logo} alt="ELSOKHNA YACHTS" className="h-10 w-10" />
+          <Link to="/" className={`flex items-center gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
+            <img src={logo} alt="ELSOKHNA YACHTS" className="h-8 w-8 md:h-10 md:w-10" />
             <div className={`${isRTL ? 'text-right' : 'text-left'}`}>
-              <div className="text-lg font-bold bg-gradient-ocean bg-clip-text text-transparent whitespace-nowrap leading-tight">
-                ELSOKHNA <span className="text-primary font-extrabold">YACHTS</span>
+              <div className="text-sm md:text-lg font-bold bg-gradient-ocean bg-clip-text text-transparent leading-tight">
+                <span className="block sm:inline">ELSOKHNA</span>{' '}
+                <span className="text-primary font-extrabold block sm:inline">YACHTS</span>
               </div>
               {language === 'ar' && (
                 <div className="text-xs text-muted-foreground -mt-1 whitespace-nowrap">
