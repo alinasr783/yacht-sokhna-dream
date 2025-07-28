@@ -139,6 +139,7 @@ export type Database = {
       yachts: {
         Row: {
           created_at: string
+          currency: string | null
           description_ar: string | null
           description_en: string | null
           features_ar: string | null
@@ -148,10 +149,13 @@ export type Database = {
           name_ar: string
           name_en: string
           price: number | null
+          price_from: number | null
+          price_to: number | null
           updated_at: string
         }
         Insert: {
           created_at?: string
+          currency?: string | null
           description_ar?: string | null
           description_en?: string | null
           features_ar?: string | null
@@ -161,10 +165,13 @@ export type Database = {
           name_ar: string
           name_en: string
           price?: number | null
+          price_from?: number | null
+          price_to?: number | null
           updated_at?: string
         }
         Update: {
           created_at?: string
+          currency?: string | null
           description_ar?: string | null
           description_en?: string | null
           features_ar?: string | null
@@ -174,6 +181,8 @@ export type Database = {
           name_ar?: string
           name_en?: string
           price?: number | null
+          price_from?: number | null
+          price_to?: number | null
           updated_at?: string
         }
         Relationships: [

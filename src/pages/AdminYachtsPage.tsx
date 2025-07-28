@@ -25,6 +25,9 @@ interface Yacht {
   features_en?: string;
   features_ar?: string;
   price?: number;
+  price_from?: number;
+  price_to?: number;
+  currency?: string;
   location_id?: string;
 }
 
@@ -50,7 +53,9 @@ const AdminYachtsPage = () => {
     description_ar: '',
     features_en: '',
     features_ar: '',
-    price: '',
+    price_from: '',
+    price_to: '',
+    currency: 'USD',
     location_id: '',
     images: [] as string[]
   });
@@ -103,7 +108,9 @@ const AdminYachtsPage = () => {
         description_ar: formData.description_ar || null,
         features_en: formData.features_en || null,
         features_ar: formData.features_ar || null,
-        price: formData.price ? parseFloat(formData.price) : null,
+        price_from: formData.price_from ? parseFloat(formData.price_from) : null,
+        price_to: formData.price_to ? parseFloat(formData.price_to) : null,
+        currency: formData.currency,
         location_id: formData.location_id || null
       };
 
@@ -135,7 +142,9 @@ const AdminYachtsPage = () => {
         description_ar: '',
         features_en: '',
         features_ar: '',
-        price: '',
+        price_from: '',
+        price_to: '',
+        currency: 'USD',
         location_id: '',
         images: []
       });
@@ -159,7 +168,9 @@ const AdminYachtsPage = () => {
       description_ar: yacht.description_ar || '',
       features_en: yacht.features_en || '',
       features_ar: yacht.features_ar || '',
-      price: yacht.price?.toString() || '',
+      price_from: yacht.price_from?.toString() || yacht.price?.toString() || '',
+      price_to: yacht.price_to?.toString() || yacht.price?.toString() || '',
+      currency: yacht.currency || 'USD',
       location_id: yacht.location_id || '',
       images: []
     });
@@ -251,7 +262,9 @@ const AdminYachtsPage = () => {
                       description_ar: '',
                       features_en: '',
                       features_ar: '',
-                      price: '',
+                      price_from: '',
+                      price_to: '',
+                      currency: 'USD',
                       location_id: '',
                       images: []
                     });
@@ -335,32 +348,55 @@ const AdminYachtsPage = () => {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-3 gap-4">
                     <div>
-                      <Label htmlFor="price">{t('admin.price', 'Price', 'السعر')}</Label>
+                      <Label htmlFor="currency">{t('admin.currency', 'Currency', 'العملة')}</Label>
+                      <Select value={formData.currency} onValueChange={(value) => setFormData({...formData, currency: value})}>
+                        <SelectTrigger>
+                          <SelectValue placeholder={t('admin.selectCurrency', 'Select currency', 'اختر العملة')} />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="USD">USD ($)</SelectItem>
+                          <SelectItem value="EGP">EGP (ج.م)</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div>
+                      <Label htmlFor="price_from">{t('admin.priceFrom', 'Price From', 'السعر من')}</Label>
                       <Input
-                        id="price"
+                        id="price_from"
                         type="number"
-                        value={formData.price}
-                        onChange={(e) => setFormData({...formData, price: e.target.value})}
+                        value={formData.price_from}
+                        onChange={(e) => setFormData({...formData, price_from: e.target.value})}
                         placeholder="0.00"
                       />
                     </div>
                     <div>
-                      <Label htmlFor="location_id">{t('admin.location', 'Location', 'الموقع')}</Label>
-                      <Select value={formData.location_id} onValueChange={(value) => setFormData({...formData, location_id: value})}>
-                        <SelectTrigger>
-                          <SelectValue placeholder={t('admin.selectLocation', 'Select location', 'اختر الموقع')} />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {locations.map((location) => (
-                            <SelectItem key={location.id} value={location.id}>
-                              {isRTL ? location.name_ar : location.name_en}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                      <Label htmlFor="price_to">{t('admin.priceTo', 'Price To', 'السعر إلى')}</Label>
+                      <Input
+                        id="price_to"
+                        type="number"
+                        value={formData.price_to}
+                        onChange={(e) => setFormData({...formData, price_to: e.target.value})}
+                        placeholder="0.00"
+                      />
                     </div>
+                  </div>
+
+                  <div>
+                    <Label htmlFor="location_id">{t('admin.location', 'Location', 'الموقع')}</Label>
+                    <Select value={formData.location_id} onValueChange={(value) => setFormData({...formData, location_id: value})}>
+                      <SelectTrigger>
+                        <SelectValue placeholder={t('admin.selectLocation', 'Select location', 'اختر الموقع')} />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {locations.map((location) => (
+                          <SelectItem key={location.id} value={location.id}>
+                            {isRTL ? location.name_ar : location.name_en}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </div>
 
                   <ImageUpload
@@ -428,9 +464,15 @@ const AdminYachtsPage = () => {
                         {isRTL ? yacht.description_ar : yacht.description_en}
                       </p>
                     )}
-                    {yacht.price && (
+                    {(yacht.price_from || yacht.price_to || yacht.price) && (
                       <p className={`font-semibold text-primary ${isRTL ? 'text-right' : 'text-left'}`}>
-                        ${yacht.price.toLocaleString()}
+                        {yacht.price_from && yacht.price_to ? (
+                          `${yacht.currency === 'EGP' ? 'ج.م' : '$'}${yacht.price_from.toLocaleString()} - ${yacht.currency === 'EGP' ? 'ج.م' : '$'}${yacht.price_to.toLocaleString()}`
+                        ) : yacht.price ? (
+                          `${yacht.currency === 'EGP' ? 'ج.م' : '$'}${yacht.price.toLocaleString()}`
+                        ) : yacht.price_from ? (
+                          `${yacht.currency === 'EGP' ? 'ج.م' : '$'}${yacht.price_from.toLocaleString()}+`
+                        ) : ''}
                       </p>
                     )}
                   </div>
