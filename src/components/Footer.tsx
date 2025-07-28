@@ -35,11 +35,11 @@ export const Footer = () => {
             <div className="space-y-2">
               <div className="flex items-center space-x-2">
                 <Phone className="h-4 w-4" />
-                <span>01158954215</span>
+                <span>01064283248</span>
               </div>
               <div className="flex items-center space-x-2">
                 <Mail className="h-4 w-4" />
-                <span>alinasreldin783@gmail.com</span>
+                <span>elsokhnayatch@gmail.com</span>
               </div>
               <div className="flex items-center space-x-2">
                 <MapPin className="h-4 w-4" />
