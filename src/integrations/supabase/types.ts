@@ -45,6 +45,7 @@ export type Database = {
           created_at: string
           id: string
           image_url: string | null
+          show_on_homepage: boolean | null
           title_ar: string
           title_en: string
           updated_at: string
@@ -55,6 +56,7 @@ export type Database = {
           created_at?: string
           id?: string
           image_url?: string | null
+          show_on_homepage?: boolean | null
           title_ar: string
           title_en: string
           updated_at?: string
@@ -65,9 +67,37 @@ export type Database = {
           created_at?: string
           id?: string
           image_url?: string | null
+          show_on_homepage?: boolean | null
           title_ar?: string
           title_en?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      contact_info: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          phone: string | null
+          updated_at: string
+          whatsapp: string | null
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          phone?: string | null
+          updated_at?: string
+          whatsapp?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          phone?: string | null
+          updated_at?: string
+          whatsapp?: string | null
         }
         Relationships: []
       }
@@ -80,6 +110,7 @@ export type Database = {
           id: string
           name_ar: string
           name_en: string
+          show_on_homepage: boolean | null
           updated_at: string
         }
         Insert: {
@@ -90,6 +121,7 @@ export type Database = {
           id?: string
           name_ar: string
           name_en: string
+          show_on_homepage?: boolean | null
           updated_at?: string
         }
         Update: {
@@ -100,6 +132,7 @@ export type Database = {
           id?: string
           name_ar?: string
           name_en?: string
+          show_on_homepage?: boolean | null
           updated_at?: string
         }
         Relationships: []
@@ -151,6 +184,7 @@ export type Database = {
           price: number | null
           price_from: number | null
           price_to: number | null
+          show_on_homepage: boolean | null
           updated_at: string
         }
         Insert: {
@@ -167,6 +201,7 @@ export type Database = {
           price?: number | null
           price_from?: number | null
           price_to?: number | null
+          show_on_homepage?: boolean | null
           updated_at?: string
         }
         Update: {
@@ -183,6 +218,7 @@ export type Database = {
           price?: number | null
           price_from?: number | null
           price_to?: number | null
+          show_on_homepage?: boolean | null
           updated_at?: string
         }
         Relationships: [

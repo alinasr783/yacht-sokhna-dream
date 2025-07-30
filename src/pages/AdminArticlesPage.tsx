@@ -14,6 +14,8 @@ import { BookOpen, Plus, Edit, Trash2, ArrowLeft, Calendar } from 'lucide-react'
 import { Link } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import { ImageUpload } from '@/components/ImageUpload';
+import { RichTextEditor } from '@/components/RichTextEditor';
+import { Checkbox } from '@/components/ui/checkbox';
 
 interface Article {
   id: string;
@@ -23,6 +25,7 @@ interface Article {
   content_ar: string;
   image_url?: string;
   created_at: string;
+  show_on_homepage?: boolean;
 }
 
 const AdminArticlesPage = () => {
@@ -39,7 +42,8 @@ const AdminArticlesPage = () => {
     content_en: '',
     content_ar: '',
     image_url: '',
-    images: [] as string[]
+    images: [] as string[],
+    show_on_homepage: true
   });
 
   useEffect(() => {
@@ -75,7 +79,8 @@ const AdminArticlesPage = () => {
         title_ar: formData.title_ar,
         content_en: formData.content_en,
         content_ar: formData.content_ar,
-        image_url: formData.image_url || null
+        image_url: formData.image_url || null,
+        show_on_homepage: formData.show_on_homepage
       };
 
       if (editingArticle) {
@@ -105,7 +110,8 @@ const AdminArticlesPage = () => {
         content_en: '',
         content_ar: '',
         image_url: '',
-        images: []
+        images: [],
+        show_on_homepage: true
       });
       fetchArticles();
     } catch (error) {
@@ -126,7 +132,8 @@ const AdminArticlesPage = () => {
       content_en: article.content_en,
       content_ar: article.content_ar,
       image_url: article.image_url || '',
-      images: []
+      images: [],
+      show_on_homepage: article.show_on_homepage ?? true
     });
     setIsDialogOpen(true);
   };
@@ -224,7 +231,8 @@ const AdminArticlesPage = () => {
                       content_en: '',
                       content_ar: '',
                       image_url: '',
-                      images: []
+                      images: [],
+                      show_on_homepage: true
                     });
                   }}
                 >
@@ -277,24 +285,29 @@ const AdminArticlesPage = () => {
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <Label htmlFor="content_en">{t('admin.contentEn', 'Content (English)', 'المحتوى (إنجليزي)')}</Label>
-                      <Textarea
-                        id="content_en"
-                        value={formData.content_en}
-                        onChange={(e) => setFormData({...formData, content_en: e.target.value})}
-                        rows={10}
-                        required
+                      <RichTextEditor
+                        content={formData.content_en}
+                        onChange={(content) => setFormData({...formData, content_en: content})}
                       />
                     </div>
                     <div>
                       <Label htmlFor="content_ar">{t('admin.contentAr', 'Content (Arabic)', 'المحتوى (عربي)')}</Label>
-                      <Textarea
-                        id="content_ar"
-                        value={formData.content_ar}
-                        onChange={(e) => setFormData({...formData, content_ar: e.target.value})}
-                        rows={10}
-                        required
+                      <RichTextEditor
+                        content={formData.content_ar}
+                        onChange={(content) => setFormData({...formData, content_ar: content})}
                       />
                     </div>
+                  </div>
+
+                  <div className="flex items-center space-x-2">
+                    <Checkbox
+                      id="show_on_homepage"
+                      checked={formData.show_on_homepage}
+                      onCheckedChange={(checked) => setFormData({...formData, show_on_homepage: checked as boolean})}
+                    />
+                    <Label htmlFor="show_on_homepage">
+                      {t('admin.showOnHomepage', 'Show on Homepage', 'عرض في الصفحة الرئيسية')}
+                    </Label>
                   </div>
 
                   <ImageUpload

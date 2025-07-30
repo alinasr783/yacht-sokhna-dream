@@ -15,6 +15,7 @@ import { Anchor, Plus, Edit, Trash2, ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import { ImageUpload } from '@/components/ImageUpload';
+import { Checkbox } from '@/components/ui/checkbox';
 
 interface Yacht {
   id: string;
@@ -29,6 +30,7 @@ interface Yacht {
   price_to?: number;
   currency?: string;
   location_id?: string;
+  show_on_homepage?: boolean;
 }
 
 interface Location {
