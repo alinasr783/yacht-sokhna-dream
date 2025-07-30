@@ -9,6 +9,7 @@ import { supabase } from '@/integrations/supabase/client';
 import heroImage from '@/assets/hero-yacht-blue.jpg';
 import { Anchor, MapPin, FileText } from 'lucide-react';
 import { YachtLoader } from '@/components/ui/loading-spinner';
+import { Link } from 'react-router-dom';
 
 interface Yacht {
   id: string;
@@ -138,10 +139,10 @@ const Index = () => {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 animate-fade-in justify-center" style={{animationDelay: '0.6s'}}>
             <Button variant="hero" size="xl" asChild>
-              <a href="/yachts">{t('hero.exploreYachts', 'Explore Yachts', 'استكشف اليخوت')}</a>
+              <Link to="/yachts">{t('hero.exploreYachts', 'Explore Yachts', 'استكشف اليخوت')}</Link>
             </Button>
             <Button variant="outline" size="xl" className="bg-white text-blue-600 border-white hover:bg-white hover:text-blue-700 font-semibold" asChild>
-              <a href="/locations">{t('hero.viewLocations', 'View Locations', 'عرض المواقع')}</a>
+              <Link to="/locations">{t('hero.viewLocations', 'View Locations', 'عرض المواقع')}</Link>
             </Button>
           </div>
         </div>
@@ -274,9 +275,9 @@ const Index = () => {
                         {new Date(article.created_at).toLocaleDateString()}
                       </span>
                       <Button variant="outline" size="sm" asChild>
-                        <a href={`/article/${article.id}`}>
+                        <Link to={`/article/${article.id}`}>
                           {t('readMore', 'Read More', 'اقرأ المزيد')}
-                        </a>
+                        </Link>
                       </Button>
                     </div>
                   </div>
@@ -293,9 +294,9 @@ const Index = () => {
 
           <div className="text-center mt-12">
             <Button variant="outline" asChild>
-              <a href="/articles">
+              <Link to="/articles">
                 {t('articles.viewAll', 'View All Articles', 'عرض جميع المقالات')}
-              </a>
+              </Link>
             </Button>
           </div>
         </div>
