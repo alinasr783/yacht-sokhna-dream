@@ -14,6 +14,7 @@ import { MapPin, Plus, Edit, Trash2, ArrowLeft, ExternalLink } from 'lucide-reac
 import { Link } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import { ImageUpload } from '@/components/ImageUpload';
+import { Checkbox } from '@/components/ui/checkbox';
 
 interface Location {
   id: string;
@@ -22,6 +23,7 @@ interface Location {
   description_en?: string;
   description_ar?: string;
   google_maps_link?: string;
+  show_on_homepage?: boolean;
 }
 
 const AdminLocationsPage = () => {
@@ -38,7 +40,8 @@ const AdminLocationsPage = () => {
     description_en: '',
     description_ar: '',
     google_maps_link: '',
-    images: [] as string[]
+    images: [] as string[],
+    show_on_homepage: true
   });
 
   useEffect(() => {
@@ -74,7 +77,8 @@ const AdminLocationsPage = () => {
         name_ar: formData.name_ar,
         description_en: formData.description_en || null,
         description_ar: formData.description_ar || null,
-        google_maps_link: formData.google_maps_link || null
+        google_maps_link: formData.google_maps_link || null,
+        show_on_homepage: formData.show_on_homepage
       };
 
       if (editingLocation) {
@@ -104,7 +108,8 @@ const AdminLocationsPage = () => {
         description_en: '',
         description_ar: '',
         google_maps_link: '',
-        images: []
+        images: [],
+        show_on_homepage: true
       });
       fetchLocations();
     } catch (error) {
@@ -125,7 +130,8 @@ const AdminLocationsPage = () => {
       description_en: location.description_en || '',
       description_ar: location.description_ar || '',
       google_maps_link: location.google_maps_link || '',
-      images: []
+      images: [],
+      show_on_homepage: location.show_on_homepage ?? true
     });
     setIsDialogOpen(true);
   };
@@ -214,7 +220,8 @@ const AdminLocationsPage = () => {
                       description_en: '',
                       description_ar: '',
                       google_maps_link: '',
-                      images: []
+                      images: [],
+                      show_on_homepage: true
                     });
                   }}
                 >
@@ -292,6 +299,17 @@ const AdminLocationsPage = () => {
                     initialImages={formData.images}
                     maxImages={6}
                   />
+
+                  <div className="flex items-center space-x-2">
+                    <Checkbox
+                      id="show_on_homepage"
+                      checked={formData.show_on_homepage}
+                      onCheckedChange={(checked) => setFormData({...formData, show_on_homepage: checked as boolean})}
+                    />
+                    <Label htmlFor="show_on_homepage">
+                      {t('admin.showOnHomepage', 'Show on Homepage', 'عرض في الصفحة الرئيسية')}
+                    </Label>
+                  </div>
 
                   <div className={`flex gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
                     <Button type="submit">

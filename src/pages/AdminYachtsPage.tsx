@@ -59,7 +59,8 @@ const AdminYachtsPage = () => {
     price_to: '',
     currency: 'USD',
     location_id: '',
-    images: [] as string[]
+    images: [] as string[],
+    show_on_homepage: true
   });
 
   useEffect(() => {
@@ -113,7 +114,8 @@ const AdminYachtsPage = () => {
         price_from: formData.price_from ? parseFloat(formData.price_from) : null,
         price_to: formData.price_to ? parseFloat(formData.price_to) : null,
         currency: formData.currency,
-        location_id: formData.location_id || null
+        location_id: formData.location_id || null,
+        show_on_homepage: formData.show_on_homepage
       };
 
       if (editingYacht) {
@@ -148,7 +150,8 @@ const AdminYachtsPage = () => {
         price_to: '',
         currency: 'USD',
         location_id: '',
-        images: []
+        images: [],
+        show_on_homepage: true
       });
       fetchYachts();
     } catch (error) {
@@ -174,7 +177,8 @@ const AdminYachtsPage = () => {
       price_to: yacht.price_to?.toString() || yacht.price?.toString() || '',
       currency: yacht.currency || 'USD',
       location_id: yacht.location_id || '',
-      images: []
+      images: [],
+      show_on_homepage: yacht.show_on_homepage ?? true
     });
     setIsDialogOpen(true);
   };
@@ -268,7 +272,8 @@ const AdminYachtsPage = () => {
                       price_to: '',
                       currency: 'USD',
                       location_id: '',
-                      images: []
+                      images: [],
+                      show_on_homepage: true
                     });
                   }}
                 >
@@ -408,6 +413,17 @@ const AdminYachtsPage = () => {
                     initialImages={formData.images}
                     maxImages={8}
                   />
+
+                  <div className="flex items-center space-x-2">
+                    <Checkbox
+                      id="show_on_homepage"
+                      checked={formData.show_on_homepage}
+                      onCheckedChange={(checked) => setFormData({...formData, show_on_homepage: checked as boolean})}
+                    />
+                    <Label htmlFor="show_on_homepage">
+                      {t('admin.showOnHomepage', 'Show on Homepage', 'عرض في الصفحة الرئيسية')}
+                    </Label>
+                  </div>
 
                   <div className={`flex gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
                     <Button type="submit">

@@ -17,6 +17,8 @@ import AdminDashboard from "./pages/AdminDashboard";
 import AdminYachtsPage from "./pages/AdminYachtsPage";
 import AdminLocationsPage from "./pages/AdminLocationsPage";
 import AdminArticlesPage from "./pages/AdminArticlesPage";
+import { AdminContactPage } from "./pages/AdminContactPage";
+import { AdminUsersPage } from "./pages/AdminUsersPage";
 import NotFound from "./pages/NotFound";
 import { useAdminAuth } from "./hooks/useAdminAuth";
 
@@ -39,6 +41,8 @@ const AppRoutes = () => {
       <Route path="/admin/yachts" element={adminSession ? <AdminYachtsPage /> : <AdminLoginPage />} />
       <Route path="/admin/locations" element={adminSession ? <AdminLocationsPage /> : <AdminLoginPage />} />
       <Route path="/admin/articles" element={adminSession ? <AdminArticlesPage /> : <AdminLoginPage />} />
+      <Route path="/admin/contact" element={adminSession ? <AdminContactPage /> : <AdminLoginPage />} />
+      <Route path="/admin/users" element={adminSession ? <AdminUsersPage /> : <AdminLoginPage />} />
       {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
       <Route path="*" element={<NotFound />} />
     </Routes>

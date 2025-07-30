@@ -10,6 +10,8 @@ import heroImage from '@/assets/hero-yacht-blue.jpg';
 import { Anchor, MapPin, FileText } from 'lucide-react';
 import { YachtLoader } from '@/components/ui/loading-spinner';
 import { Link } from 'react-router-dom';
+import { useContactInfo } from '@/hooks/useContactInfo';
+import { ArticleCard } from '@/components/ArticleCard';
 
 interface Yacht {
   id: string;
@@ -45,10 +47,12 @@ interface Article {
   content_ar: string;
   image_url?: string;
   created_at: string;
+  show_on_homepage?: boolean;
 }
 
 const Index = () => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const contactInfo = useContactInfo();
   const [yachts, setYachts] = useState<Yacht[]>([]);
   const [locations, setLocations] = useState<Location[]>([]);
   const [articles, setArticles] = useState<Article[]>([]);
@@ -57,7 +61,7 @@ const Index = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Fetch yachts with images and locations
+        // Fetch yachts with images and locations (only show_on_homepage)
         const { data: yachtsData } = await supabase
           .from('yachts')
           .select(`
@@ -65,18 +69,21 @@ const Index = () => {
             yacht_images(image_url, is_primary),
             locations(name_en, name_ar)
           `)
+          .eq('show_on_homepage', true)
           .limit(6);
 
-        // Fetch locations
+        // Fetch locations (only show_on_homepage)
         const { data: locationsData } = await supabase
           .from('locations')
           .select('*')
+          .eq('show_on_homepage', true)
           .limit(6);
 
-        // Fetch articles
+        // Fetch articles (only show_on_homepage)
         const { data: articlesData } = await supabase
           .from('articles')
           .select('*')
+          .eq('show_on_homepage', true)
           .order('created_at', { ascending: false })
           .limit(3);
 
@@ -253,35 +260,7 @@ const Index = () => {
           ) : articles.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {articles.map((article) => (
-                <div key={article.id} className="bg-card rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
-                  {article.image_url && (
-                    <div className="aspect-video bg-muted">
-                      <img 
-                        src={article.image_url} 
-                        alt={t('articleImage', article.title_en, article.title_ar)}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                  )}
-                  <div className="p-6">
-                    <h3 className="text-xl font-semibold mb-3 text-foreground">
-                      {t('articleTitle', article.title_en, article.title_ar)}
-                    </h3>
-                    <p className="text-muted-foreground mb-4 line-clamp-3">
-                      {t('articleContent', article.content_en, article.content_ar).substring(0, 150)}...
-                    </p>
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm text-muted-foreground">
-                        {new Date(article.created_at).toLocaleDateString()}
-                      </span>
-                      <Button variant="outline" size="sm" asChild>
-                        <Link to={`/article/${article.id}`}>
-                          {t('readMore', 'Read More', 'اقرأ المزيد')}
-                        </Link>
-                      </Button>
-                    </div>
-                  </div>
-                </div>
+                <ArticleCard key={article.id} article={article} />
               ))}
             </div>
           ) : (

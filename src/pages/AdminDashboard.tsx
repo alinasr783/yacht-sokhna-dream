@@ -5,7 +5,7 @@ import { Footer } from '@/components/Footer';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { Anchor, MapPin, BookOpen, LogOut, Plus } from 'lucide-react';
+import { Anchor, MapPin, BookOpen, LogOut, Plus, Settings, Users } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const AdminDashboard = () => {
@@ -41,6 +41,20 @@ const AdminDashboard = () => {
       icon: BookOpen,
       href: '/admin/articles',
       color: 'bg-gradient-luxury'
+    },
+    {
+      title: t('admin.manageContact', 'Contact Info', 'معلومات التواصل'),
+      description: t('admin.contactDesc', 'Manage contact information', 'إدارة معلومات التواصل'),
+      icon: Settings,
+      href: '/admin/contact',
+      color: 'bg-gradient-elegant'
+    },
+    {
+      title: t('admin.manageUsers', 'Admin Users', 'المستخدمين'),
+      description: t('admin.usersDesc', 'Manage admin users', 'إدارة المستخدمين الأدمن'),
+      icon: Users,
+      href: '/admin/users',
+      color: 'bg-gradient-hero'
     }
   ];
 

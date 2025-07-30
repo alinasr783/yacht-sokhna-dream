@@ -4,6 +4,7 @@ import { Badge } from './ui/badge';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { MapPin, Phone, Mail } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useContactInfo } from '@/hooks/useContactInfo';
 
 interface YachtCardProps {
   yacht: {
@@ -26,6 +27,7 @@ interface YachtCardProps {
 
 export const YachtCard = ({ yacht }: YachtCardProps) => {
   const { t, language } = useLanguage();
+  const contactInfo = useContactInfo();
 
   const primaryImage = yacht.images?.find(img => img.is_primary) || yacht.images?.[0];
   const yachtName = language === 'ar' ? yacht.name_ar : yacht.name_en;
@@ -35,13 +37,15 @@ export const YachtCard = ({ yacht }: YachtCardProps) => {
   const handleContact = (type: 'whatsapp' | 'phone' | 'email') => {
     switch (type) {
       case 'whatsapp':
-        window.open(`https://wa.me/01158954215?text=${encodeURIComponent(`I'm interested in ${yachtName}`)}`);
+        const whatsappNumber = contactInfo.whatsapp || '01158954215';
+        window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(`I'm interested in ${yachtName}`)}`);
         break;
       case 'phone':
-        window.open('tel:01158954215');
+        const phoneNumber = contactInfo.phone || '01158954215';
+        window.open(`tel:${phoneNumber}`);
         break;
       case 'email':
-        window.open(`mailto:alinasreldin783@gmail.com?subject=${encodeURIComponent(`Inquiry about ${yachtName}`)}`);
+        window.open(`mailto:${contactInfo.email}?subject=${encodeURIComponent(`Inquiry about ${yachtName}`)}`);
         break;
     }
   };
