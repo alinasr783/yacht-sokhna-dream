@@ -1,14 +1,10 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "dist/public"
-      }
-    }
-  ],
+  "name": "yacht-charter-egypt",
+  "buildCommand": "node build-static.js",
+  "outputDirectory": "dist/public",
+  "installCommand": "npm install",
+  "framework": null,
   "routes": [
     {
       "handle": "filesystem"
@@ -17,5 +13,9 @@
       "src": "/(.*)",
       "dest": "/index.html"
     }
-  ]
+  ],
+  "env": {
+    "NODE_ENV": "production"
+  },
+  "functions": {}
 }

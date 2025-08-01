@@ -4,9 +4,10 @@ server/
 .env.development
 .env.production
 *.log
-node_modules/
+.local/
+drizzle.config.ts
 
-# Keep only client and shared for static build
+# Keep only files needed for static build
 !client/
 !shared/
 !package.json
@@ -14,3 +15,4 @@ node_modules/
 !tsconfig.json
 !tailwind.config.ts
 !postcss.config.js
+!attached_assets/
