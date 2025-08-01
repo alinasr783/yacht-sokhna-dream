@@ -6,7 +6,7 @@
 
 ## الملفات المُحدّثة:
 
-### 1. `vercel.json` (الحل النهائي)
+### 1. `vercel.json` (الحل النهائي - مُصحح)
 ```json
 {
   "version": 2,
@@ -21,8 +21,7 @@
   ],
   "env": {
     "NODE_ENV": "production"
-  },
-  "functions": {}
+  }
 }
 ```
 
