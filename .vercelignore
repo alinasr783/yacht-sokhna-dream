@@ -1,0 +1,16 @@
+# Ignore server files for static deployment
+server/
+.env.local
+.env.development
+.env.production
+*.log
+node_modules/
+
+# Keep only client and shared for static build
+!client/
+!shared/
+!package.json
+!vite.config.ts
+!tsconfig.json
+!tailwind.config.ts
+!postcss.config.js

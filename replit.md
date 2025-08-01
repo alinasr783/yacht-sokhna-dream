@@ -38,6 +38,9 @@ A comprehensive yacht rental/charter website with public-facing rental interface
   - Generated comprehensive deployment guide (README-DEPLOYMENT.md)
   - Solved code display issue when hosting on external platforms
   - Added build scripts and configuration files for multiple hosting providers
+  - Fixed "Missing public directory" error in Vercel
+  - Updated build configuration to use @vercel/static-build properly
+  - Created VERCEL-DEPLOY-GUIDE.md with step-by-step troubleshooting
 - Fixed critical image upload functionality across admin dashboard
 - Corrected AdminArticlesPage to properly save image_url field when uploading images
 - Updated AdminYachtsPage to save yacht images to yacht_images table after yacht creation

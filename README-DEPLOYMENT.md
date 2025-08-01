@@ -6,13 +6,19 @@
 
 ## الحل المُطبق
 
-### 1. إعدادات Vercel (`vercel.json`)
+### 1. إعدادات Vercel (`vercel.json`) - محدّث ✅
 ```json
 {
   "version": 2,
-  "buildCommand": "vite build",
-  "outputDirectory": "dist/public",
-  "framework": "vite",
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "dist/public"
+      }
+    }
+  ],
   "routes": [
     { "handle": "filesystem" },
     { "src": "/(.*)", "dest": "/index.html" }
