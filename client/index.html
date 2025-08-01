@@ -1,82 +1,80 @@
 <!doctype html>
-<html lang="en">
-  <!-- إذا كان الموقع بالعربية، غير إلى "ar" -->
+<html lang="ar" dir="rtl">
+  <!-- تغيير اللغة إلى العربية مع اتجاه النص من اليمين لليسار -->
   <head>
     <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, maximum-scale=1"
-    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+    <meta name="theme-color" content="#000000"> <!-- لون شريط العنوان في متصفحات الموبايل -->
 
     <!-- Primary Meta Tags -->
-    <title>
-      Premium Yacht Rentals in Egypt - Best Deals in Sahl Hasheesh, Hurghada and
-      More
-    </title>
-    <meta
-      name="description"
-      content="Experience luxury yacht rentals in Egypt's top destinations including Sahl Hasheesh, Hurghada, and Suez. Book your exclusive sailing adventure today with premium service."
-    />
-    <meta
-      name="keywords"
-      content="yacht rental, Egypt, Red Sea, Sahl Hasheesh, Suez, Hurghada, Sailing, Luxury yacht, booking, yacht charter, sailing trips, marine activities"
-    />
+    <title>إيجار يخوت فاخرة في مصر - أفضل عروض السخنة والغردقة | السخنة لليخوت</title>
+    <meta name="description" content="احجز يختك الفاخر في أفضل مناطق مصر مثل العين السخنة والغردقة. استمتع برحلات بحرية فاخرة مع خدمة VIP وتجربة لا تُنسى.">
+    <meta name="keywords" content="حجز يخوت, يخوت مصر, يخوت السخنة, يخوت العين السخنة, تأجير يخوت, رحلات بحرية, سياحة فاخرة, الغردقة, البحر الأحمر">
+    <meta name="author" content="السخنة لليخوت">
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://elsokhnayatchs.com/" />
-    <!-- استبدل برابط موقعك الفعلي -->
-    <meta
-      property="og:title"
-      content="Premium Yacht Rentals in Egypt - Best Deals in Sahl Hasheesh, Hurghada and More"
-    />
-    <meta
-      property="og:description"
-      content="Experience luxury yacht rentals in Egypt's top destinations including Sahl Hasheesh, Hurghada, and Suez. Book your exclusive sailing adventure today with premium service."
-    />
-    <meta
-      property="og:image"
-      content="https://i.ibb.co/xtrMxDNQ/logo-yacht-RIz0-QMq-C.jpg"
-    />
-    <!-- استبدل برابط صورة معبرة عن الموقع -->
+    <meta property="og:title" content="إيجار يخوت فاخرة في مصر - أفضل عروض السخنة والغردقة" />
+    <meta property="og:description" content="احجز يختك الفاخر في أفضل مناطق مصر مثل العين السخنة والغردقة. استمتع برحلات بحرية فاخرة مع خدمة VIP وتجربة لا تُنسى." />
+    <meta property="og:image" content="https://i.ibb.co/xtrMxDNQ/logo-yacht-RIz0-QMq-C.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:locale" content="ar_EG" />
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image" />
     <meta property="twitter:url" content="https://elsokhnayatchs.com/" />
-    <!-- استبدل برابط موقعك الفعلي -->
-    <meta
-      property="twitter:title"
-      content="Premium Yacht Rentals in Egypt - Best Deals in Sahl Hasheesh, Hurghada and More"
-    />
-    <meta
-      property="twitter:description"
-      content="Experience luxury yacht rentals in Egypt's top destinations including Sahl Hasheesh, Hurghada, and Suez. Book your exclusive sailing adventure today with premium service."
-    />
-    <meta
-      property="twitter:image"
-      content="https://i.ibb.co/xtrMxDNQ/logo-yacht-RIz0-QMq-C.jpg"
-    />
-    <!-- استبدل برابط صورة معبرة عن الموقع -->
+    <meta property="twitter:title" content="إيجار يخوت فاخرة في مصر - أفضل عروض السخنة والغردقة" />
+    <meta property="twitter:description" content="احجز يختك الفاخر في أفضل مناطق مصر مثل العين السخنة والغردقة. استمتع برحلات بحرية فاخرة مع خدمة VIP وتجربة لا تُنسى." />
+    <meta property="twitter:image" content="https://i.ibb.co/xtrMxDNQ/logo-yacht-RIz0-QMq-C.jpg" />
 
     <!-- Favicon -->
-    <link
-      rel="icon"
-      type="image/x-icon"
-      href="https://i.ibb.co/xtrMxDNQ/logo-yacht-RIz0-QMq-C.jpg"
-    />
-    <!-- تأكد من وجود ملف favicon.ico في المجلد public -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 
     <!-- Canonical URL -->
     <link rel="canonical" href="https://elsokhnayatchs.com/" />
-    <!-- استبدل برابط موقعك الأساسي -->
+
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "TravelAgency",
+      "name": "السخنة لليخوت",
+      "url": "https://elsokhnayatchs.com",
+      "logo": "https://i.ibb.co/xtrMxDNQ/logo-yacht-RIz0-QMq-C.jpg",
+      "description": "شركة متخصصة في تأجير اليخوت الفاخرة في مصر",
+      "address": {
+        "@type": "PostalAddress",
+        "addressCountry": "EG",
+        "addressRegion": "السخنة"
+      },
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "telephone": "+20-XXX-XXXXXX",
+        "contactType": "customer service"
+      }
+    }
+    </script>
   </head>
   <body>
+    <noscript>
+      <strong>نعتذر، ولكن موقعنا يتطلب تفعيل JavaScript ليعمل بشكل صحيح.</strong>
+    </noscript>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
-    <!-- This is a replit script which adds a banner on the top of the page when opened in development mode outside the replit environment -->
-    <script
-      type="text/javascript"
-      src="https://replit.com/public/js/replit-dev-banner.js"
-    ></script>
+    
+    <!-- Replit development banner (remove in production) -->
+    <script type="text/javascript" src="https://replit.com/public/js/replit-dev-banner.js"></script>
+    
+    <!-- Google Tag Manager (optional) -->
+    <script>
+      (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+      new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+      j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+      'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+      })(window,document,'script','dataLayer','GTM-XXXXXX');
+    </script>
   </body>
 </html>
