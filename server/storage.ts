@@ -375,6 +375,10 @@ export class MemStorage implements IStorage {
       id,
       createdAt: new Date(),
       updatedAt: new Date(),
+      descriptionEn: location.descriptionEn ?? null,
+      descriptionAr: location.descriptionAr ?? null,
+      googleMapsLink: location.googleMapsLink ?? null,
+      showOnHomepage: location.showOnHomepage ?? null,
     };
     this.locations.set(id, newLocation);
     return newLocation;
@@ -419,6 +423,16 @@ export class MemStorage implements IStorage {
       id,
       createdAt: new Date(),
       updatedAt: new Date(),
+      descriptionEn: yacht.descriptionEn ?? null,
+      descriptionAr: yacht.descriptionAr ?? null,
+      featuresEn: yacht.featuresEn ?? null,
+      featuresAr: yacht.featuresAr ?? null,
+      price: yacht.price ?? null,
+      priceFrom: yacht.priceFrom ?? null,
+      priceTo: yacht.priceTo ?? null,
+      currency: yacht.currency ?? null,
+      locationId: yacht.locationId ?? null,
+      showOnHomepage: yacht.showOnHomepage ?? null,
     };
     this.yachts.set(id, newYacht);
     return newYacht;
@@ -454,6 +468,7 @@ export class MemStorage implements IStorage {
       ...image,
       id,
       createdAt: new Date(),
+      isPrimary: image.isPrimary ?? null,
     };
     this.yachtImages.set(id, newImage);
     return newImage;
@@ -487,6 +502,8 @@ export class MemStorage implements IStorage {
       id,
       createdAt: new Date(),
       updatedAt: new Date(),
+      imageUrl: article.imageUrl ?? null,
+      showOnHomepage: article.showOnHomepage ?? null,
     };
     this.articles.set(id, newArticle);
     return newArticle;
