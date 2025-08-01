@@ -66,13 +66,13 @@ const YachtDetailsPage = () => {
     const yachtName = yacht ? (language === 'ar' ? yacht.name_ar : yacht.name_en) : '';
     switch (type) {
       case 'whatsapp':
-        window.open(`https://wa.me/01158954215?text=${encodeURIComponent(`I'm interested in ${yachtName}`)}`);
+        window.open(`https://wa.me/01064283248?text=${encodeURIComponent(`I'm interested in ${yachtName}`)}`);
         break;
       case 'phone':
-        window.open('tel:01158954215');
+        window.open('tel:01064283248');
         break;
       case 'email':
-        window.open(`mailto:alinasreldin783@gmail.com?subject=${encodeURIComponent(`Inquiry about ${yachtName}`)}`);
+        window.open(`mailto:elsokhnayatch@gmail.com?subject=${encodeURIComponent(`Inquiry about ${yachtName}`)}`);
         break;
     }
   };
@@ -225,7 +225,7 @@ const YachtDetailsPage = () => {
                     className="w-full"
                   >
                     <Phone className="h-5 w-5 mr-2" />
-                    WhatsApp: 01158954215
+                    WhatsApp: 01064283248
                   </Button>
                   
                   <Button
