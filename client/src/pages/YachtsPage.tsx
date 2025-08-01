@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { supabase } from '@/integrations/supabase/client';
+import { SEOHead, SEOData } from '@/components/SEOHead';
 import { Search, Anchor } from 'lucide-react';
 import yachtsHeroImage from '@/assets/yachts-page-hero.jpg';
 
@@ -13,17 +14,17 @@ interface Yacht {
   id: string;
   name_en: string;
   name_ar: string;
-  description_en?: string;
-  description_ar?: string;
-  price?: number;
+  description_en?: string | null;
+  description_ar?: string | null;
+  price?: number | null;
   yacht_images: Array<{
     image_url: string;
-    is_primary?: boolean;
+    is_primary?: boolean | null;
   }>;
   locations?: {
     name_en: string;
     name_ar: string;
-  };
+  } | null;
 }
 
 const YachtsPage = () => {
@@ -65,6 +66,7 @@ const YachtsPage = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead {...SEOData.yachts} />
       <Header />
       
       {/* Page Header */}

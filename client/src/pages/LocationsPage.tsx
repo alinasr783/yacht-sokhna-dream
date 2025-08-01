@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { supabase } from '@/integrations/supabase/client';
+import { SEOHead, SEOData } from '@/components/SEOHead';
 import { Search, MapPin } from 'lucide-react';
 import locationsHeroImage from '@/assets/locations-page-hero.jpg';
 
@@ -13,9 +14,9 @@ interface Location {
   id: string;
   name_en: string;
   name_ar: string;
-  description_en?: string;
-  description_ar?: string;
-  google_maps_link?: string;
+  description_en?: string | null;
+  description_ar?: string | null;
+  google_maps_link?: string | null;
   yacht_count?: number;
 }
 
@@ -72,6 +73,7 @@ const LocationsPage = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead {...SEOData.locations} />
       <Header />
       
       {/* Page Header */}

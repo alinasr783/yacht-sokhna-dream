@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { supabase } from '@/integrations/supabase/client';
+import { SEOHead, SEOData } from '@/components/SEOHead';
 import { Search, BookOpen, Calendar, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { YachtLoader } from '@/components/ui/loading-spinner';
@@ -17,7 +18,7 @@ interface Article {
   title_ar: string;
   content_en: string;
   content_ar: string;
-  image_url?: string;
+  image_url?: string | null;
   created_at: string;
 }
 
@@ -66,6 +67,7 @@ const ArticlesPage = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead {...SEOData.articles} />
       <Header />
       
       {/* Page Header */}

@@ -6,6 +6,7 @@ import { LocationCard } from '@/components/LocationCard';
 import { Button } from '@/components/ui/button';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { supabase } from '@/integrations/supabase/client';
+import { SEOHead, SEOData } from '@/components/SEOHead';
 import heroImage from '@/assets/hero-yacht-blue.jpg';
 import { Anchor, MapPin, FileText } from 'lucide-react';
 import { YachtLoader } from '@/components/ui/loading-spinner';
@@ -17,26 +18,26 @@ interface Yacht {
   id: string;
   name_en: string;
   name_ar: string;
-  description_en?: string;
-  description_ar?: string;
-  price?: number;
+  description_en?: string | null;
+  description_ar?: string | null;
+  price?: number | null;
   yacht_images: Array<{
     image_url: string;
-    is_primary?: boolean;
+    is_primary?: boolean | null;
   }>;
   locations?: {
     name_en: string;
     name_ar: string;
-  };
+  } | null;
 }
 
 interface Location {
   id: string;
   name_en: string;
   name_ar: string;
-  description_en?: string;
-  description_ar?: string;
-  google_maps_link?: string;
+  description_en?: string | null;
+  description_ar?: string | null;
+  google_maps_link?: string | null;
 }
 
 interface Article {
@@ -45,9 +46,9 @@ interface Article {
   title_ar: string;
   content_en: string;
   content_ar: string;
-  image_url?: string;
+  image_url?: string | null;
   created_at: string;
-  show_on_homepage?: boolean;
+  show_on_homepage?: boolean | null;
 }
 
 const Index = () => {
@@ -102,6 +103,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead {...SEOData.home} />
       <Header />
       
       {/* Hero Section */}
