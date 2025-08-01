@@ -23,9 +23,9 @@ interface Article {
   title_ar: string;
   content_en: string;
   content_ar: string;
-  image_url?: string;
+  image_url?: string | null;
   created_at: string;
-  show_on_homepage?: boolean;
+  show_on_homepage?: boolean | null;
 }
 
 const AdminArticlesPage = () => {

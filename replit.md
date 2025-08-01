@@ -30,6 +30,10 @@ A comprehensive yacht rental/charter website with public-facing rental interface
 - Fixed AdminLocationsPage to support image uploads (may need image_url column in locations table)
 - Fixed admin login navigation issue - now properly redirects to dashboard after successful login
 - Fixed image handling where images were uploading to Supabase Storage but URLs weren't being saved to database
+- Added image display in admin dashboard cards for yachts, locations, and articles
+- Fixed data type compatibility issues between Supabase null values and TypeScript undefined types
+- Enhanced yacht cards to display first uploaded image with proper fallback handling
+- Enhanced location cards to display uploaded images with proper error handling
 
 ## Key Features
 - Multilingual support (English/Arabic)

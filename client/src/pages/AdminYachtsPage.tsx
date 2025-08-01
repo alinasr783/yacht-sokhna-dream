@@ -21,16 +21,17 @@ interface Yacht {
   id: string;
   name_en: string;
   name_ar: string;
-  description_en?: string;
-  description_ar?: string;
-  features_en?: string;
-  features_ar?: string;
-  price?: number;
-  price_from?: number;
-  price_to?: number;
-  currency?: string;
-  location_id?: string;
-  show_on_homepage?: boolean;
+  description_en?: string | null;
+  description_ar?: string | null;
+  features_en?: string | null;
+  features_ar?: string | null;
+  price?: number | null;
+  price_from?: number | null;
+  price_to?: number | null;
+  currency?: string | null;
+  location_id?: string | null;
+  show_on_homepage?: boolean | null;
+  images?: string[];
 }
 
 interface Location {
@@ -76,11 +77,29 @@ const AdminYachtsPage = () => {
 
   const fetchYachts = async () => {
     try {
-      const { data } = await supabase
+      const { data: yachtsData } = await supabase
         .from('yachts')
         .select('*')
         .order('created_at', { ascending: false });
-      setYachts(data || []);
+      
+      if (yachtsData) {
+        // Fetch images for each yacht
+        const yachtsWithImages = await Promise.all(
+          yachtsData.map(async (yacht) => {
+            const { data: imagesData } = await supabase
+              .from('yacht_images')
+              .select('image_url')
+              .eq('yacht_id', yacht.id)
+              .order('is_primary', { ascending: false });
+            
+            return {
+              ...yacht,
+              images: imagesData?.map(img => img.image_url) || []
+            };
+          })
+        );
+        setYachts(yachtsWithImages);
+      }
     } catch (error) {
       console.error('Error fetching yachts:', error);
     } finally {
@@ -211,7 +230,7 @@ const AdminYachtsPage = () => {
       price_to: yacht.price_to?.toString() || yacht.price?.toString() || '',
       currency: yacht.currency || 'USD',
       location_id: yacht.location_id || '',
-      images: [],
+      images: yacht.images || [],
       show_on_homepage: yacht.show_on_homepage ?? true
     });
     setIsDialogOpen(true);
@@ -510,7 +529,17 @@ const AdminYachtsPage = () => {
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-2">
+                  <div className="space-y-3">
+                    {yacht.images && yacht.images.length > 0 && (
+                      <img
+                        src={yacht.images[0]}
+                        alt={isRTL ? yacht.name_ar : yacht.name_en}
+                        className="w-full h-32 object-cover rounded-md"
+                        onError={(e) => {
+                          e.currentTarget.style.display = 'none';
+                        }}
+                      />
+                    )}
                     {yacht.description_en && (
                       <p className={`text-muted-foreground text-sm ${isRTL ? 'text-right' : 'text-left'}`}>
                         {isRTL ? yacht.description_ar : yacht.description_en}

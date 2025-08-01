@@ -20,11 +20,11 @@ interface Location {
   id: string;
   name_en: string;
   name_ar: string;
-  description_en?: string;
-  description_ar?: string;
-  google_maps_link?: string;
-  image_url?: string;
-  show_on_homepage?: boolean;
+  description_en?: string | null;
+  description_ar?: string | null;
+  google_maps_link?: string | null;
+  image_url?: string | null;
+  show_on_homepage?: boolean | null;
 }
 
 const AdminLocationsPage = () => {
@@ -225,6 +225,7 @@ const AdminLocationsPage = () => {
                       description_en: '',
                       description_ar: '',
                       google_maps_link: '',
+                      image_url: '',
                       images: [],
                       show_on_homepage: true
                     });
@@ -382,6 +383,16 @@ const AdminLocationsPage = () => {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-3">
+                    {location.image_url && (
+                      <img
+                        src={location.image_url}
+                        alt={isRTL ? location.name_ar : location.name_en}
+                        className="w-full h-32 object-cover rounded-md"
+                        onError={(e) => {
+                          e.currentTarget.style.display = 'none';
+                        }}
+                      />
+                    )}
                     {location.description_en && (
                       <p className={`text-muted-foreground text-sm ${isRTL ? 'text-right' : 'text-left'}`}>
                         {isRTL ? location.description_ar : location.description_en}
