@@ -73,7 +73,7 @@ export const AdminContactPage = () => {
       const { error } = await supabase
         .from('contact_info')
         .upsert({
-          id: contactInfo.id,
+          id: contactInfo.id || undefined,
           email: contactInfo.email,
           phone: contactInfo.phone || null,
           whatsapp: contactInfo.whatsapp || null

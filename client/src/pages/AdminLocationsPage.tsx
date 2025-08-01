@@ -23,6 +23,7 @@ interface Location {
   description_en?: string;
   description_ar?: string;
   google_maps_link?: string;
+  image_url?: string;
   show_on_homepage?: boolean;
 }
 
@@ -40,6 +41,7 @@ const AdminLocationsPage = () => {
     description_en: '',
     description_ar: '',
     google_maps_link: '',
+    image_url: '',
     images: [] as string[],
     show_on_homepage: true
   });
@@ -78,6 +80,7 @@ const AdminLocationsPage = () => {
         description_en: formData.description_en || null,
         description_ar: formData.description_ar || null,
         google_maps_link: formData.google_maps_link || null,
+        image_url: formData.image_url || null,
         show_on_homepage: formData.show_on_homepage
       };
 
@@ -108,6 +111,7 @@ const AdminLocationsPage = () => {
         description_en: '',
         description_ar: '',
         google_maps_link: '',
+        image_url: '',
         images: [],
         show_on_homepage: true
       });
@@ -130,7 +134,8 @@ const AdminLocationsPage = () => {
       description_en: location.description_en || '',
       description_ar: location.description_ar || '',
       google_maps_link: location.google_maps_link || '',
-      images: [],
+      image_url: location.image_url || '',
+      images: location.image_url ? [location.image_url] : [],
       show_on_homepage: location.show_on_homepage ?? true
     });
     setIsDialogOpen(true);
@@ -292,12 +297,26 @@ const AdminLocationsPage = () => {
                     />
                   </div>
 
+                  <div>
+                    <Label htmlFor="image_url">{t('admin.imageUrl', 'Image URL', 'رابط الصورة')}</Label>
+                    <Input
+                      id="image_url"
+                      value={formData.image_url}
+                      onChange={(e) => setFormData({...formData, image_url: e.target.value})}
+                      placeholder="https://example.com/image.jpg"
+                    />
+                  </div>
+
                   <ImageUpload
                     bucketName="location-images"
                     entityType="location"
-                    onImagesChange={(imageUrls) => setFormData({...formData, images: imageUrls})}
-                    initialImages={formData.images}
-                    maxImages={6}
+                    onImagesChange={(imageUrls) => setFormData({
+                      ...formData, 
+                      images: imageUrls,
+                      image_url: imageUrls[0] || '' // Set the first image as the main image_url
+                    })}
+                    initialImages={formData.image_url ? [formData.image_url] : []}
+                    maxImages={1}
                   />
 
                   <div className="flex items-center space-x-2">

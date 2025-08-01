@@ -118,23 +118,57 @@ const AdminYachtsPage = () => {
         show_on_homepage: formData.show_on_homepage
       };
 
+      let yachtId: string;
+
       if (editingYacht) {
         await supabase
           .from('yachts')
           .update(yachtData)
           .eq('id', editingYacht.id);
+        yachtId = editingYacht.id;
+        
+        // Delete existing images and add new ones
+        if (formData.images.length > 0) {
+          await supabase
+            .from('yacht_images')
+            .delete()
+            .eq('yacht_id', yachtId);
+        }
+        
         toast({
           title: t('admin.success', 'Success', 'نجح'),
           description: t('admin.yachtUpdated', 'Yacht updated successfully', 'تم تحديث اليخت بنجاح'),
         });
       } else {
-        await supabase
+        const { data: newYacht } = await supabase
           .from('yachts')
-          .insert(yachtData);
+          .insert(yachtData)
+          .select()
+          .single();
+        
+        if (newYacht) {
+          yachtId = newYacht.id;
+        } else {
+          throw new Error('Failed to create yacht');
+        }
+        
         toast({
           title: t('admin.success', 'Success', 'نجح'),
           description: t('admin.yachtCreated', 'Yacht created successfully', 'تم إنشاء اليخت بنجاح'),
         });
+      }
+
+      // Save yacht images
+      if (formData.images.length > 0) {
+        const imageData = formData.images.map((imageUrl, index) => ({
+          yacht_id: yachtId,
+          image_url: imageUrl,
+          is_primary: index === 0 // First image is primary
+        }));
+
+        await supabase
+          .from('yacht_images')
+          .insert(imageData);
       }
 
       setIsDialogOpen(false);

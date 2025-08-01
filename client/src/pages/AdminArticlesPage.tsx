@@ -132,7 +132,7 @@ const AdminArticlesPage = () => {
       content_en: article.content_en,
       content_ar: article.content_ar,
       image_url: article.image_url || '',
-      images: [],
+      images: article.image_url ? [article.image_url] : [],
       show_on_homepage: article.show_on_homepage ?? true
     });
     setIsDialogOpen(true);
@@ -313,9 +313,13 @@ const AdminArticlesPage = () => {
                   <ImageUpload
                     bucketName="article-images"
                     entityType="article"
-                    onImagesChange={(imageUrls) => setFormData({...formData, images: imageUrls})}
-                    initialImages={formData.images}
-                    maxImages={5}
+                    onImagesChange={(imageUrls) => setFormData({
+                      ...formData, 
+                      images: imageUrls,
+                      image_url: imageUrls[0] || '' // Set the first image as the main image_url
+                    })}
+                    initialImages={formData.image_url ? [formData.image_url] : []}
+                    maxImages={1}
                   />
 
                   <div className={`flex gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
