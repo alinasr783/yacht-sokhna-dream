@@ -29,7 +29,11 @@ export default defineConfig({
     emptyOutDir: true,
   },
   server: {
-    port: 3000,
-    allowedHosts: ["715ed6d6-9038-416c-9e7b-08ded42128bd-00-83h9zcii0atj.worf.replit.dev"],
+    proxy: {
+      '/api': {
+        target: 'http://localhost:5000',
+        changeOrigin: true
+      }
+    }
   }
 });
