@@ -45,7 +45,8 @@ const AdminLoginPage = () => {
           description: t('admin.welcome', 'Welcome to admin dashboard', 'مرحباً بك في لوحة الادارة'),
         });
 
-        navigate('/admin/dashboard');
+        // Force page reload to ensure admin session is recognized
+        window.location.href = '/admin/dashboard';
       } else {
         toast({
           title: t('admin.loginError', 'Login Failed', 'فشل تسجيل الدخول'),

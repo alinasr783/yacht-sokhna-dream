@@ -27,6 +27,8 @@ A comprehensive yacht rental/charter website with public-facing rental interface
 - Fixed critical image upload functionality across admin dashboard
 - Corrected AdminArticlesPage to properly save image_url field when uploading images
 - Updated AdminYachtsPage to save yacht images to yacht_images table after yacht creation
+- Fixed AdminLocationsPage to support image uploads (may need image_url column in locations table)
+- Fixed admin login navigation issue - now properly redirects to dashboard after successful login
 - Fixed image handling where images were uploading to Supabase Storage but URLs weren't being saved to database
 
 ## Key Features
