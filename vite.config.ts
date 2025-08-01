@@ -28,4 +28,8 @@ export default defineConfig({
     outDir: path.resolve(import.meta.dirname, "dist/public"),
     emptyOutDir: true,
   },
+  server: {
+    port: 3000,
+    allowedHosts: ["715ed6d6-9038-416c-9e7b-08ded42128bd-00-83h9zcii0atj.worf.replit.dev"],
+  }
 });
