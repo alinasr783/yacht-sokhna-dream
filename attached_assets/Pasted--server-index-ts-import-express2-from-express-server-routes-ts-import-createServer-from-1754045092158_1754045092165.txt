@@ -1,0 +1,858 @@
+// server/index.ts
+import express2 from "express";
+
+// server/routes.ts
+import { createServer } from "http";
+
+// server/storage.ts
+import { drizzle } from "drizzle-orm/neon-http";
+import { neon } from "@neondatabase/serverless";
+import { eq, desc, and } from "drizzle-orm";
+
+// shared/schema.ts
+import { pgTable, text, serial, boolean, uuid, timestamp, numeric } from "drizzle-orm/pg-core";
+import { createInsertSchema } from "drizzle-zod";
+import { relations } from "drizzle-orm";
+var adminUsers = pgTable("admin_users", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  email: text("email").notNull(),
+  password: text("password").notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow()
+});
+var locations = pgTable("locations", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  nameEn: text("name_en").notNull(),
+  nameAr: text("name_ar").notNull(),
+  descriptionEn: text("description_en"),
+  descriptionAr: text("description_ar"),
+  googleMapsLink: text("google_maps_link"),
+  showOnHomepage: boolean("show_on_homepage").default(true),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow()
+});
+var yachts = pgTable("yachts", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  nameEn: text("name_en").notNull(),
+  nameAr: text("name_ar").notNull(),
+  descriptionEn: text("description_en"),
+  descriptionAr: text("description_ar"),
+  featuresEn: text("features_en"),
+  featuresAr: text("features_ar"),
+  price: numeric("price"),
+  priceFrom: numeric("price_from"),
+  priceTo: numeric("price_to"),
+  currency: text("currency").default("USD"),
+  locationId: uuid("location_id").references(() => locations.id),
+  showOnHomepage: boolean("show_on_homepage").default(true),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow()
+});
+var yachtImages = pgTable("yacht_images", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  yachtId: uuid("yacht_id").notNull().references(() => yachts.id, { onDelete: "cascade" }),
+  imageUrl: text("image_url").notNull(),
+  isPrimary: boolean("is_primary").default(false),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow()
+});
+var articles = pgTable("articles", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  titleEn: text("title_en").notNull(),
+  titleAr: text("title_ar").notNull(),
+  contentEn: text("content_en").notNull(),
+  contentAr: text("content_ar").notNull(),
+  imageUrl: text("image_url"),
+  showOnHomepage: boolean("show_on_homepage").default(true),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow()
+});
+var contactInfo = pgTable("contact_info", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  email: text("email").notNull(),
+  phone: text("phone"),
+  whatsapp: text("whatsapp"),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow()
+});
+var locationsRelations = relations(locations, ({ many }) => ({
+  yachts: many(yachts)
+}));
+var yachtsRelations = relations(yachts, ({ one, many }) => ({
+  location: one(locations, {
+    fields: [yachts.locationId],
+    references: [locations.id]
+  }),
+  images: many(yachtImages)
+}));
+var yachtImagesRelations = relations(yachtImages, ({ one }) => ({
+  yacht: one(yachts, {
+    fields: [yachtImages.yachtId],
+    references: [yachts.id]
+  })
+}));
+var insertAdminUserSchema = createInsertSchema(adminUsers).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true
+});
+var insertLocationSchema = createInsertSchema(locations).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true
+});
+var insertYachtSchema = createInsertSchema(yachts).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true
+});
+var insertYachtImageSchema = createInsertSchema(yachtImages).omit({
+  id: true,
+  createdAt: true
+});
+var insertArticleSchema = createInsertSchema(articles).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true
+});
+var insertContactInfoSchema = createInsertSchema(contactInfo).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true
+});
+var users = pgTable("users", {
+  id: serial("id").primaryKey(),
+  username: text("username").notNull().unique(),
+  password: text("password").notNull()
+});
+var insertUserSchema = createInsertSchema(users).pick({
+  username: true,
+  password: true
+});
+
+// server/storage.ts
+var MemStorage = class {
+  users;
+  adminUsers;
+  locations;
+  yachts;
+  yachtImages;
+  articles;
+  contactInfo;
+  currentUserId;
+  constructor() {
+    this.users = /* @__PURE__ */ new Map();
+    this.adminUsers = /* @__PURE__ */ new Map();
+    this.locations = /* @__PURE__ */ new Map();
+    this.yachts = /* @__PURE__ */ new Map();
+    this.yachtImages = /* @__PURE__ */ new Map();
+    this.articles = /* @__PURE__ */ new Map();
+    this.contactInfo = null;
+    this.currentUserId = 1;
+  }
+  // Legacy user methods
+  async getUser(id) {
+    return this.users.get(id);
+  }
+  async getUserByUsername(username) {
+    return Array.from(this.users.values()).find((user) => user.username === username);
+  }
+  async createUser(insertUser) {
+    const id = this.currentUserId++;
+    const user = { ...insertUser, id };
+    this.users.set(id, user);
+    return user;
+  }
+  // Admin User methods
+  async getAdminUser(email, password) {
+    return Array.from(this.adminUsers.values()).find(
+      (user) => user.email === email && user.password === password
+    );
+  }
+  async createAdminUser(user) {
+    const id = `admin-${Date.now()}`;
+    const adminUser = {
+      ...user,
+      id,
+      createdAt: /* @__PURE__ */ new Date(),
+      updatedAt: /* @__PURE__ */ new Date()
+    };
+    this.adminUsers.set(id, adminUser);
+    return adminUser;
+  }
+  async updateAdminUser(id, user) {
+    const existing = this.adminUsers.get(id);
+    if (!existing) throw new Error("Admin user not found");
+    const updated = { ...existing, ...user, updatedAt: /* @__PURE__ */ new Date() };
+    this.adminUsers.set(id, updated);
+    return updated;
+  }
+  async deleteAdminUser(id) {
+    this.adminUsers.delete(id);
+  }
+  async getAllAdminUsers() {
+    return Array.from(this.adminUsers.values()).sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+  }
+  // Location methods
+  async getAllLocations() {
+    return Array.from(this.locations.values()).sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+  }
+  async getLocationById(id) {
+    return this.locations.get(id);
+  }
+  async createLocation(location) {
+    const id = `location-${Date.now()}`;
+    const newLocation = {
+      ...location,
+      id,
+      createdAt: /* @__PURE__ */ new Date(),
+      updatedAt: /* @__PURE__ */ new Date(),
+      descriptionEn: location.descriptionEn ?? null,
+      descriptionAr: location.descriptionAr ?? null,
+      googleMapsLink: location.googleMapsLink ?? null,
+      showOnHomepage: location.showOnHomepage ?? null
+    };
+    this.locations.set(id, newLocation);
+    return newLocation;
+  }
+  async updateLocation(id, location) {
+    const existing = this.locations.get(id);
+    if (!existing) throw new Error("Location not found");
+    const updated = { ...existing, ...location, updatedAt: /* @__PURE__ */ new Date() };
+    this.locations.set(id, updated);
+    return updated;
+  }
+  async deleteLocation(id) {
+    this.locations.delete(id);
+  }
+  async getHomepageLocations() {
+    return Array.from(this.locations.values()).filter((location) => location.showOnHomepage).sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime()).slice(0, 6);
+  }
+  // Yacht methods
+  async getAllYachts() {
+    return Array.from(this.yachts.values()).sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+  }
+  async getYachtById(id) {
+    return this.yachts.get(id);
+  }
+  async getYachtsByLocation(locationId) {
+    return Array.from(this.yachts.values()).filter((yacht) => yacht.locationId === locationId);
+  }
+  async createYacht(yacht) {
+    const id = `yacht-${Date.now()}`;
+    const newYacht = {
+      ...yacht,
+      id,
+      createdAt: /* @__PURE__ */ new Date(),
+      updatedAt: /* @__PURE__ */ new Date(),
+      descriptionEn: yacht.descriptionEn ?? null,
+      descriptionAr: yacht.descriptionAr ?? null,
+      featuresEn: yacht.featuresEn ?? null,
+      featuresAr: yacht.featuresAr ?? null,
+      price: yacht.price ?? null,
+      priceFrom: yacht.priceFrom ?? null,
+      priceTo: yacht.priceTo ?? null,
+      currency: yacht.currency ?? null,
+      locationId: yacht.locationId ?? null,
+      showOnHomepage: yacht.showOnHomepage ?? null
+    };
+    this.yachts.set(id, newYacht);
+    return newYacht;
+  }
+  async updateYacht(id, yacht) {
+    const existing = this.yachts.get(id);
+    if (!existing) throw new Error("Yacht not found");
+    const updated = { ...existing, ...yacht, updatedAt: /* @__PURE__ */ new Date() };
+    this.yachts.set(id, updated);
+    return updated;
+  }
+  async deleteYacht(id) {
+    this.yachts.delete(id);
+  }
+  async getHomepageYachts() {
+    return Array.from(this.yachts.values()).filter((yacht) => yacht.showOnHomepage).sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime()).slice(0, 6);
+  }
+  // Yacht Image methods
+  async getYachtImages(yachtId) {
+    return Array.from(this.yachtImages.values()).filter((image) => image.yachtId === yachtId);
+  }
+  async createYachtImage(image) {
+    const id = `image-${Date.now()}`;
+    const newImage = {
+      ...image,
+      id,
+      createdAt: /* @__PURE__ */ new Date(),
+      isPrimary: image.isPrimary ?? null
+    };
+    this.yachtImages.set(id, newImage);
+    return newImage;
+  }
+  async updateYachtImage(id, image) {
+    const existing = this.yachtImages.get(id);
+    if (!existing) throw new Error("Yacht image not found");
+    const updated = { ...existing, ...image };
+    this.yachtImages.set(id, updated);
+    return updated;
+  }
+  async deleteYachtImage(id) {
+    this.yachtImages.delete(id);
+  }
+  // Article methods
+  async getAllArticles() {
+    return Array.from(this.articles.values()).sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+  }
+  async getArticleById(id) {
+    return this.articles.get(id);
+  }
+  async createArticle(article) {
+    const id = `article-${Date.now()}`;
+    const newArticle = {
+      ...article,
+      id,
+      createdAt: /* @__PURE__ */ new Date(),
+      updatedAt: /* @__PURE__ */ new Date(),
+      imageUrl: article.imageUrl ?? null,
+      showOnHomepage: article.showOnHomepage ?? null
+    };
+    this.articles.set(id, newArticle);
+    return newArticle;
+  }
+  async updateArticle(id, article) {
+    const existing = this.articles.get(id);
+    if (!existing) throw new Error("Article not found");
+    const updated = { ...existing, ...article, updatedAt: /* @__PURE__ */ new Date() };
+    this.articles.set(id, updated);
+    return updated;
+  }
+  async deleteArticle(id) {
+    this.articles.delete(id);
+  }
+  async getHomepageArticles() {
+    return Array.from(this.articles.values()).filter((article) => article.showOnHomepage).sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime()).slice(0, 3);
+  }
+  // Contact Info methods
+  async getContactInfo() {
+    return this.contactInfo || void 0;
+  }
+  async updateContactInfo(contactInfo2) {
+    if (this.contactInfo) {
+      this.contactInfo = { ...this.contactInfo, ...contactInfo2, updatedAt: /* @__PURE__ */ new Date() };
+    } else {
+      this.contactInfo = {
+        id: `contact-${Date.now()}`,
+        email: contactInfo2.email || "",
+        phone: contactInfo2.phone || null,
+        whatsapp: contactInfo2.whatsapp || null,
+        createdAt: /* @__PURE__ */ new Date(),
+        updatedAt: /* @__PURE__ */ new Date()
+      };
+    }
+    return this.contactInfo;
+  }
+};
+var storage = new MemStorage();
+
+// server/routes.ts
+async function registerRoutes(app2) {
+  app2.post("/api/admin/login", async (req, res) => {
+    try {
+      const { email, password } = req.body;
+      const admin = await storage.getAdminUser(email, password);
+      if (admin) {
+        res.json({
+          success: true,
+          user: {
+            id: admin.id,
+            email: admin.email,
+            loginTime: Date.now()
+          }
+        });
+      } else {
+        res.status(401).json({ success: false, message: "Invalid credentials" });
+      }
+    } catch (error) {
+      console.error("Admin login error:", error);
+      res.status(500).json({ success: false, message: "Internal server error" });
+    }
+  });
+  app2.get("/api/admin/users", async (req, res) => {
+    try {
+      const users2 = await storage.getAllAdminUsers();
+      res.json(users2);
+    } catch (error) {
+      console.error("Get admin users error:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+  app2.post("/api/admin/users", async (req, res) => {
+    try {
+      const userData = insertAdminUserSchema.parse(req.body);
+      const user = await storage.createAdminUser(userData);
+      res.json(user);
+    } catch (error) {
+      console.error("Create admin user error:", error);
+      res.status(400).json({ message: "Invalid user data" });
+    }
+  });
+  app2.put("/api/admin/users/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const userData = insertAdminUserSchema.partial().parse(req.body);
+      const user = await storage.updateAdminUser(id, userData);
+      res.json(user);
+    } catch (error) {
+      console.error("Update admin user error:", error);
+      res.status(400).json({ message: "Invalid user data" });
+    }
+  });
+  app2.delete("/api/admin/users/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      await storage.deleteAdminUser(id);
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Delete admin user error:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+  app2.get("/api/locations", async (req, res) => {
+    try {
+      const locations2 = await storage.getAllLocations();
+      res.json(locations2);
+    } catch (error) {
+      console.error("Get locations error:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+  app2.get("/api/locations/homepage", async (req, res) => {
+    try {
+      const locations2 = await storage.getHomepageLocations();
+      res.json(locations2);
+    } catch (error) {
+      console.error("Get homepage locations error:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+  app2.get("/api/locations/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const location = await storage.getLocationById(id);
+      if (location) {
+        res.json(location);
+      } else {
+        res.status(404).json({ message: "Location not found" });
+      }
+    } catch (error) {
+      console.error("Get location error:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+  app2.post("/api/locations", async (req, res) => {
+    try {
+      const locationData = insertLocationSchema.parse(req.body);
+      const location = await storage.createLocation(locationData);
+      res.json(location);
+    } catch (error) {
+      console.error("Create location error:", error);
+      res.status(400).json({ message: "Invalid location data" });
+    }
+  });
+  app2.put("/api/locations/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const locationData = insertLocationSchema.partial().parse(req.body);
+      const location = await storage.updateLocation(id, locationData);
+      res.json(location);
+    } catch (error) {
+      console.error("Update location error:", error);
+      res.status(400).json({ message: "Invalid location data" });
+    }
+  });
+  app2.delete("/api/locations/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      await storage.deleteLocation(id);
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Delete location error:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+  app2.get("/api/yachts", async (req, res) => {
+    try {
+      const yachts2 = await storage.getAllYachts();
+      const yachtsWithImages = await Promise.all(
+        yachts2.map(async (yacht) => {
+          const images = await storage.getYachtImages(yacht.id);
+          return { ...yacht, yacht_images: images };
+        })
+      );
+      res.json(yachtsWithImages);
+    } catch (error) {
+      console.error("Get yachts error:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+  app2.get("/api/yachts/homepage", async (req, res) => {
+    try {
+      const yachts2 = await storage.getHomepageYachts();
+      const yachtsWithImages = await Promise.all(
+        yachts2.map(async (yacht) => {
+          const images = await storage.getYachtImages(yacht.id);
+          return { ...yacht, yacht_images: images };
+        })
+      );
+      res.json(yachtsWithImages);
+    } catch (error) {
+      console.error("Get homepage yachts error:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+  app2.get("/api/yachts/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const yacht = await storage.getYachtById(id);
+      if (yacht) {
+        const images = await storage.getYachtImages(yacht.id);
+        res.json({ ...yacht, yacht_images: images });
+      } else {
+        res.status(404).json({ message: "Yacht not found" });
+      }
+    } catch (error) {
+      console.error("Get yacht error:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+  app2.get("/api/yachts/location/:locationId", async (req, res) => {
+    try {
+      const { locationId } = req.params;
+      const yachts2 = await storage.getYachtsByLocation(locationId);
+      const yachtsWithImages = await Promise.all(
+        yachts2.map(async (yacht) => {
+          const images = await storage.getYachtImages(yacht.id);
+          return { ...yacht, yacht_images: images };
+        })
+      );
+      res.json(yachtsWithImages);
+    } catch (error) {
+      console.error("Get yachts by location error:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+  app2.post("/api/yachts", async (req, res) => {
+    try {
+      const yachtData = insertYachtSchema.parse(req.body);
+      const yacht = await storage.createYacht(yachtData);
+      res.json(yacht);
+    } catch (error) {
+      console.error("Create yacht error:", error);
+      res.status(400).json({ message: "Invalid yacht data" });
+    }
+  });
+  app2.put("/api/yachts/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const yachtData = insertYachtSchema.partial().parse(req.body);
+      const yacht = await storage.updateYacht(id, yachtData);
+      res.json(yacht);
+    } catch (error) {
+      console.error("Update yacht error:", error);
+      res.status(400).json({ message: "Invalid yacht data" });
+    }
+  });
+  app2.delete("/api/yachts/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      await storage.deleteYacht(id);
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Delete yacht error:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+  app2.get("/api/yacht-images/:yachtId", async (req, res) => {
+    try {
+      const { yachtId } = req.params;
+      const images = await storage.getYachtImages(yachtId);
+      res.json(images);
+    } catch (error) {
+      console.error("Get yacht images error:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+  app2.post("/api/yacht-images", async (req, res) => {
+    try {
+      const imageData = insertYachtImageSchema.parse(req.body);
+      const image = await storage.createYachtImage(imageData);
+      res.json(image);
+    } catch (error) {
+      console.error("Create yacht image error:", error);
+      res.status(400).json({ message: "Invalid image data" });
+    }
+  });
+  app2.put("/api/yacht-images/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const imageData = insertYachtImageSchema.partial().parse(req.body);
+      const image = await storage.updateYachtImage(id, imageData);
+      res.json(image);
+    } catch (error) {
+      console.error("Update yacht image error:", error);
+      res.status(400).json({ message: "Invalid image data" });
+    }
+  });
+  app2.delete("/api/yacht-images/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      await storage.deleteYachtImage(id);
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Delete yacht image error:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+  app2.get("/api/articles", async (req, res) => {
+    try {
+      const articles2 = await storage.getAllArticles();
+      res.json(articles2);
+    } catch (error) {
+      console.error("Get articles error:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+  app2.get("/api/articles/homepage", async (req, res) => {
+    try {
+      const articles2 = await storage.getHomepageArticles();
+      res.json(articles2);
+    } catch (error) {
+      console.error("Get homepage articles error:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+  app2.get("/api/articles/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const article = await storage.getArticleById(id);
+      if (article) {
+        res.json(article);
+      } else {
+        res.status(404).json({ message: "Article not found" });
+      }
+    } catch (error) {
+      console.error("Get article error:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+  app2.post("/api/articles", async (req, res) => {
+    try {
+      const articleData = insertArticleSchema.parse(req.body);
+      const article = await storage.createArticle(articleData);
+      res.json(article);
+    } catch (error) {
+      console.error("Create article error:", error);
+      res.status(400).json({ message: "Invalid article data" });
+    }
+  });
+  app2.put("/api/articles/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const articleData = insertArticleSchema.partial().parse(req.body);
+      const article = await storage.updateArticle(id, articleData);
+      res.json(article);
+    } catch (error) {
+      console.error("Update article error:", error);
+      res.status(400).json({ message: "Invalid article data" });
+    }
+  });
+  app2.delete("/api/articles/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      await storage.deleteArticle(id);
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Delete article error:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+  app2.get("/api/contact-info", async (req, res) => {
+    try {
+      const contactInfo2 = await storage.getContactInfo();
+      res.json(contactInfo2);
+    } catch (error) {
+      console.error("Get contact info error:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+  app2.post("/api/contact-info", async (req, res) => {
+    try {
+      const contactData = insertContactInfoSchema.parse(req.body);
+      const contactInfo2 = await storage.updateContactInfo(contactData);
+      res.json(contactInfo2);
+    } catch (error) {
+      console.error("Update contact info error:", error);
+      res.status(400).json({ message: "Invalid contact data" });
+    }
+  });
+  const httpServer = createServer(app2);
+  return httpServer;
+}
+
+// server/vite.ts
+import express from "express";
+import fs from "fs";
+import path2 from "path";
+import { createServer as createViteServer, createLogger } from "vite";
+
+// vite.config.ts
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import path from "path";
+import runtimeErrorOverlay from "@replit/vite-plugin-runtime-error-modal";
+var vite_config_default = defineConfig({
+  plugins: [
+    react(),
+    runtimeErrorOverlay(),
+    ...process.env.NODE_ENV !== "production" && process.env.REPL_ID !== void 0 ? [
+      await import("@replit/vite-plugin-cartographer").then(
+        (m) => m.cartographer()
+      )
+    ] : []
+  ],
+  resolve: {
+    alias: {
+      "@": path.resolve(import.meta.dirname, "client", "src"),
+      "@shared": path.resolve(import.meta.dirname, "shared"),
+      "@assets": path.resolve(import.meta.dirname, "attached_assets")
+    }
+  },
+  root: path.resolve(import.meta.dirname, "client"),
+  build: {
+    outDir: path.resolve(import.meta.dirname, "dist/public"),
+    emptyOutDir: true
+  },
+  server: {
+    proxy: {
+      "/api": {
+        target: "http://localhost:5000",
+        changeOrigin: true
+      }
+    }
+  }
+});
+
+// server/vite.ts
+import { nanoid } from "nanoid";
+var viteLogger = createLogger();
+function log(message, source = "express") {
+  const formattedTime = (/* @__PURE__ */ new Date()).toLocaleTimeString("en-US", {
+    hour: "numeric",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: true
+  });
+  console.log(`${formattedTime} [${source}] ${message}`);
+}
+async function setupVite(app2, server) {
+  const serverOptions = {
+    middlewareMode: true,
+    hmr: { server },
+    allowedHosts: true
+  };
+  const vite = await createViteServer({
+    ...vite_config_default,
+    configFile: false,
+    customLogger: {
+      ...viteLogger,
+      error: (msg, options) => {
+        viteLogger.error(msg, options);
+        process.exit(1);
+      }
+    },
+    server: serverOptions,
+    appType: "custom"
+  });
+  app2.use(vite.middlewares);
+  app2.use("*", async (req, res, next) => {
+    const url = req.originalUrl;
+    try {
+      const clientTemplate = path2.resolve(
+        import.meta.dirname,
+        "..",
+        "client",
+        "index.html"
+      );
+      let template = await fs.promises.readFile(clientTemplate, "utf-8");
+      template = template.replace(
+        `src="/src/main.tsx"`,
+        `src="/src/main.tsx?v=${nanoid()}"`
+      );
+      const page = await vite.transformIndexHtml(url, template);
+      res.status(200).set({ "Content-Type": "text/html" }).end(page);
+    } catch (e) {
+      vite.ssrFixStacktrace(e);
+      next(e);
+    }
+  });
+}
+function serveStatic(app2) {
+  const distPath = path2.resolve(import.meta.dirname, "public");
+  if (!fs.existsSync(distPath)) {
+    throw new Error(
+      `Could not find the build directory: ${distPath}, make sure to build the client first`
+    );
+  }
+  app2.use(express.static(distPath));
+  app2.use("*", (_req, res) => {
+    res.sendFile(path2.resolve(distPath, "index.html"));
+  });
+}
+
+// server/index.ts
+var app = express2();
+app.use(express2.json());
+app.use(express2.urlencoded({ extended: false }));
+app.use((req, res, next) => {
+  const start = Date.now();
+  const path3 = req.path;
+  let capturedJsonResponse = void 0;
+  const originalResJson = res.json;
+  res.json = function(bodyJson, ...args) {
+    capturedJsonResponse = bodyJson;
+    return originalResJson.apply(res, [bodyJson, ...args]);
+  };
+  res.on("finish", () => {
+    const duration = Date.now() - start;
+    if (path3.startsWith("/api")) {
+      let logLine = `${req.method} ${path3} ${res.statusCode} in ${duration}ms`;
+      if (capturedJsonResponse) {
+        logLine += ` :: ${JSON.stringify(capturedJsonResponse)}`;
+      }
+      if (logLine.length > 80) {
+        logLine = logLine.slice(0, 79) + "\u2026";
+      }
+      log(logLine);
+    }
+  });
+  next();
+});
+(async () => {
+  const server = await registerRoutes(app);
+  app.use((err, _req, res, _next) => {
+    const status = err.status || err.statusCode || 500;
+    const message = err.message || "Internal Server Error";
+    res.status(status).json({ message });
+    throw err;
+  });
+  if (app.get("env") === "development") {
+    await setupVite(app, server);
+  } else {
+    serveStatic(app);
+  }
+  const port = 5e3;
+  server.listen({
+    port,
+    host: "0.0.0.0",
+    reusePort: true
+  }, () => {
+    log(`serving on port ${port}`);
+  });
+})();
