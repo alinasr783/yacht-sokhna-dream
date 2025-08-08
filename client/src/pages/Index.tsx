@@ -13,6 +13,7 @@ import { YachtLoader } from '@/components/ui/loading-spinner';
 import { Link } from 'react-router-dom';
 import { useContactInfo } from '@/hooks/useContactInfo';
 import { ArticleCard } from '@/components/ArticleCard';
+import WhatsAppButton from '@/components/whatsapp'
 
 interface Yacht {
   id: string;
@@ -284,6 +285,7 @@ const Index = () => {
       </section>
 
       <Footer />
+      <WhatsAppButton phoneNumber="+201064283248" message="مرحباً، أريد الاستفسار عن..." className="hidden md:flex" />
     </div>
   );
 };
