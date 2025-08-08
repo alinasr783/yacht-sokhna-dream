@@ -21,12 +21,13 @@ import { AdminContactPage } from "./pages/AdminContactPage";
 import { AdminUsersPage } from "./pages/AdminUsersPage";
 import NotFound from "./pages/NotFound";
 import { useAdminAuth } from "./hooks/useAdminAuth";
+import WhatsAppButton from "@/components/whatsapp";
 
 const queryClient = new QueryClient();
 
 const AppRoutes = () => {
   const { adminSession } = useAdminAuth();
-  
+
   return (
     <Routes>
       <Route path="/" element={<Index />} />
@@ -59,6 +60,12 @@ const App = () => {
           <BrowserRouter>
             <ScrollToTop />
             <AppRoutes />
+            {/* أضف زر واتساب هنا */}
+            <WhatsAppButton 
+              phoneNumber="+201064283248" 
+              message="مرحباً، أريد الاستفسار عن..." 
+              className="hidden md:flex" // يمكنك تعديل الكلاس حسب احتياجاتك
+            />
           </BrowserRouter>
         </TooltipProvider>
       </LanguageProvider>

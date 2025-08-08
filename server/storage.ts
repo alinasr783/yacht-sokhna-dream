@@ -1,5 +1,6 @@
-import { drizzle } from "drizzle-orm/neon-http";
-import { neon } from "@neondatabase/serverless";
+import { Pool, neonConfig } from '@neondatabase/serverless';
+import { drizzle } from 'drizzle-orm/neon-serverless';
+import ws from "ws";
 import { eq, desc, and } from "drizzle-orm";
 import * as schema from "@shared/schema";
 import type {
@@ -75,8 +76,9 @@ export class DatabaseStorage implements IStorage {
     if (!process.env.DATABASE_URL) {
       throw new Error("DATABASE_URL environment variable is required");
     }
-    const sql = neon(process.env.DATABASE_URL);
-    this.db = drizzle(sql, { schema });
+    neonConfig.webSocketConstructor = ws;
+    const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+    this.db = drizzle({ client: pool, schema });
   }
 
   // Legacy user methods for compatibility
@@ -550,5 +552,5 @@ export class MemStorage implements IStorage {
   }
 }
 
-// Use MemStorage for now since we don't have database access yet
-export const storage = new MemStorage();
+// Use DatabaseStorage now that we have DATABASE_URL
+export const storage = new DatabaseStorage();
