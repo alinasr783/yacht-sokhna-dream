@@ -37,11 +37,11 @@ export const YachtCard = ({ yacht }: YachtCardProps) => {
   const handleContact = (type: 'whatsapp' | 'phone' | 'email') => {
     switch (type) {
       case 'whatsapp':
-        const whatsappNumber = contactInfo.whatsapp || '01158954215';
+        const whatsappNumber = contactInfo.whatsapp || '+201158954215';
         window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(`I'm interested in ${yachtName}`)}`);
         break;
       case 'phone':
-        const phoneNumber = contactInfo.phone || '01158954215';
+        const phoneNumber = contactInfo.phone || '+201158954215';
         window.open(`tel:${phoneNumber}`);
         break;
       case 'email':
