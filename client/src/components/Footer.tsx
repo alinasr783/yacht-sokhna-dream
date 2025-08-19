@@ -3,11 +3,12 @@ import { Button } from './ui/button';
 import { Link } from 'react-router-dom';
 import { MapPin, Phone, Mail } from 'lucide-react';
 import logo from '@/assets/logo-yacht.png';
-
+import { DeveloperCredit } from './DeveloperCredit';
 export const Footer = () => {
   const { t } = useLanguage();
 
   return (
+    <>
     <footer className="bg-gradient-hero text-primary-foreground">
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -75,5 +76,7 @@ export const Footer = () => {
         </div>
       </div>
     </footer>
+      <DeveloperCredit />
+    </>
   );
 };
