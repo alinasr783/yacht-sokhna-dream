@@ -58,8 +58,28 @@ const LocationDetailsPage = () => {
           `)
           .eq('location_id', id);
 
-        setLocation(locationData);
-        setYachts(yachtsData || []);
+        setLocation(locationData ? {
+          ...locationData,
+          description_en: locationData.description_en || undefined,
+          description_ar: locationData.description_ar || undefined,
+          google_maps_link: locationData.google_maps_link || undefined
+        } : null);
+        setYachts(yachtsData ? yachtsData.map(yacht => ({
+          ...yacht,
+          description_en: yacht.description_en || undefined,
+          description_ar: yacht.description_ar || undefined,
+          features_en: yacht.features_en || undefined,
+          features_ar: yacht.features_ar || undefined,
+          currency: yacht.currency || undefined,
+          price: yacht.price || undefined,
+          price_from: yacht.price_from || undefined,
+          price_to: yacht.price_to || undefined,
+          location_id: yacht.location_id || undefined,
+          yacht_images: yacht.yacht_images.map(img => ({
+            ...img,
+            is_primary: img.is_primary ?? false
+          }))
+        })) : []);
       } catch (error) {
         console.error('Error fetching location data:', error);
       } finally {

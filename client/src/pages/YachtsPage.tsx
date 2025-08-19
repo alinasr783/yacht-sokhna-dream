@@ -126,8 +126,14 @@ const YachtsPage = () => {
               {filteredYachts.map((yacht) => (
                 <YachtCard key={yacht.id} yacht={{
                   ...yacht,
-                  location: yacht.locations,
-                  images: yacht.yacht_images
+                  description_en: yacht.description_en || undefined,
+                  description_ar: yacht.description_ar || undefined,
+                  price: yacht.price || undefined,
+                  location: yacht.locations || undefined,
+                  images: yacht.yacht_images.map(img => ({
+                    ...img,
+                    is_primary: img.is_primary ?? false
+                  }))
                 }} />
               ))}
             </div>

@@ -134,7 +134,7 @@ export const AdminContactPage = () => {
                   <Input
                     id="phone"
                     type="tel"
-                    value={contactInfo.phone}
+                    value={contactInfo.phone || ''}
                     onChange={(e) => setContactInfo({ ...contactInfo, phone: e.target.value })}
                     placeholder="+1234567890"
                   />
@@ -145,7 +145,7 @@ export const AdminContactPage = () => {
                   <Input
                     id="whatsapp"
                     type="tel"
-                    value={contactInfo.whatsapp}
+                    value={contactInfo.whatsapp || ''}
                     onChange={(e) => setContactInfo({ ...contactInfo, whatsapp: e.target.value })}
                     placeholder="+1234567890"
                   />

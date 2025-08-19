@@ -133,7 +133,12 @@ const LocationsPage = () => {
               {filteredLocations.map((location) => (
                 <LocationCard 
                   key={location.id} 
-                  location={location} 
+                  location={{
+                    ...location,
+                    description_en: location.description_en || undefined,
+                    description_ar: location.description_ar || undefined,
+                    google_maps_link: location.google_maps_link || undefined
+                  }}
                   yachtCount={location.yacht_count}
                 />
               ))}

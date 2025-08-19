@@ -61,11 +61,7 @@ const App = () => {
             <ScrollToTop />
             <AppRoutes />
             {/* أضف زر واتساب هنا */}
-            <WhatsAppButton 
-              phoneNumber="+201064283248" 
-              message="مرحباً، أريد الاستفسار عن..." 
-              className="hidden md:flex" // يمكنك تعديل الكلاس حسب احتياجاتك
-            />
+            <WhatsAppButton />
           </BrowserRouter>
         </TooltipProvider>
       </LanguageProvider>

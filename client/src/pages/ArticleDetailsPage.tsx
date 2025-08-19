@@ -36,7 +36,7 @@ const ArticleDetailsPage = () => {
           .eq('id', id)
           .single();
 
-        setArticle(data);
+        setArticle(data as ArticleDetails);
       } catch (error) {
         console.error('Error fetching article:', error);
       } finally {

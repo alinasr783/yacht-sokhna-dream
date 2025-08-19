@@ -185,8 +185,14 @@ const Index = () => {
               {yachts.map((yacht) => (
                 <YachtCard key={yacht.id} yacht={{
                   ...yacht,
-                  location: yacht.locations,
-                  images: yacht.yacht_images
+                  description_en: yacht.description_en || undefined,
+                  description_ar: yacht.description_ar || undefined,
+                  price: yacht.price || undefined,
+                  location: yacht.locations || undefined,
+                  images: (yacht.yacht_images || []).map(img => ({ 
+                    image_url: img.image_url, 
+                    is_primary: img.is_primary ?? false 
+                  }))
                 }} />
               ))}
             </div>
@@ -225,7 +231,12 @@ const Index = () => {
           ) : locations.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {locations.map((location) => (
-                <LocationCard key={location.id} location={location} />
+                <LocationCard key={location.id} location={{
+                  ...location,
+                  description_en: location.description_en || undefined,
+                  description_ar: location.description_ar || undefined,
+                  google_maps_link: location.google_maps_link || undefined
+                }} />
               ))}
             </div>
           ) : (
@@ -263,7 +274,10 @@ const Index = () => {
           ) : articles.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {articles.map((article) => (
-                <ArticleCard key={article.id} article={article} />
+                <ArticleCard key={article.id} article={{
+                  ...article,
+                  image_url: article.image_url || undefined
+                }} />
               ))}
             </div>
           ) : (
@@ -285,7 +299,7 @@ const Index = () => {
       </section>
 
       <Footer />
-      <WhatsAppButton phoneNumber="+201064283248" message="مرحباً، أريد الاستفسار عن..." className="hidden md:flex" />
+      <WhatsAppButton />
     </div>
   );
 };

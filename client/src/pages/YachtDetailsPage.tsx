@@ -51,7 +51,22 @@ const YachtDetailsPage = () => {
           .eq('id', id)
           .single();
 
-        setYacht(data);
+        setYacht(data ? {
+          ...data,
+          description_en: data.description_en || undefined,
+          description_ar: data.description_ar || undefined,
+          features_en: data.features_en || undefined,
+          features_ar: data.features_ar || undefined,
+          price: data.price || undefined,
+          yacht_images: data.yacht_images.map(img => ({
+            ...img,
+            is_primary: img.is_primary ?? false
+          })),
+          locations: data.locations ? {
+            ...data.locations,
+            google_maps_link: data.locations.google_maps_link || undefined
+          } : undefined
+        } : null);
       } catch (error) {
         console.error('Error fetching yacht:', error);
       } finally {
