@@ -13,7 +13,6 @@ import { supabase } from '@/integrations/supabase/client';
 import { MapPin, Plus, Edit, Trash2, ArrowLeft, ExternalLink } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
-import { ImageUpload } from '@/components/ImageUpload';
 import { Checkbox } from '@/components/ui/checkbox';
 
 interface Location {
@@ -23,7 +22,6 @@ interface Location {
   description_en?: string | null;
   description_ar?: string | null;
   google_maps_link?: string | null;
-  image_url?: string | null;
   show_on_homepage?: boolean | null;
 }
 
@@ -41,8 +39,6 @@ const AdminLocationsPage = () => {
     description_en: '',
     description_ar: '',
     google_maps_link: '',
-    image_url: '',
-    images: [] as string[],
     show_on_homepage: true
   });
 
@@ -58,13 +54,20 @@ const AdminLocationsPage = () => {
 
   const fetchLocations = async () => {
     try {
-      const { data } = await supabase
+      const { data, error } = await supabase
         .from('locations')
         .select('*')
         .order('created_at', { ascending: false });
+
+      if (error) throw error;
       setLocations(data || []);
     } catch (error) {
       console.error('Error fetching locations:', error);
+      toast({
+        title: t('admin.error', 'Error', 'خطأ'),
+        description: t('admin.errorFetching', 'Error fetching locations', 'خطأ في جلب المواقع'),
+        variant: 'destructive',
+      });
     } finally {
       setLoading(false);
     }
@@ -72,7 +75,7 @@ const AdminLocationsPage = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     try {
       const locationData = {
         name_en: formData.name_en,
@@ -80,23 +83,28 @@ const AdminLocationsPage = () => {
         description_en: formData.description_en || null,
         description_ar: formData.description_ar || null,
         google_maps_link: formData.google_maps_link || null,
-        image_url: formData.image_url || null,
         show_on_homepage: formData.show_on_homepage
       };
 
       if (editingLocation) {
-        await supabase
+        const { error } = await supabase
           .from('locations')
           .update(locationData)
           .eq('id', editingLocation.id);
+
+        if (error) throw error;
+
         toast({
           title: t('admin.success', 'Success', 'نجح'),
           description: t('admin.locationUpdated', 'Location updated successfully', 'تم تحديث الموقع بنجاح'),
         });
       } else {
-        await supabase
+        const { error } = await supabase
           .from('locations')
           .insert(locationData);
+
+        if (error) throw error;
+
         toast({
           title: t('admin.success', 'Success', 'نجح'),
           description: t('admin.locationCreated', 'Location created successfully', 'تم إنشاء الموقع بنجاح'),
@@ -111,8 +119,6 @@ const AdminLocationsPage = () => {
         description_en: '',
         description_ar: '',
         google_maps_link: '',
-        image_url: '',
-        images: [],
         show_on_homepage: true
       });
       fetchLocations();
@@ -134,8 +140,6 @@ const AdminLocationsPage = () => {
       description_en: location.description_en || '',
       description_ar: location.description_ar || '',
       google_maps_link: location.google_maps_link || '',
-      image_url: location.image_url || '',
-      images: location.image_url ? [location.image_url] : [],
       show_on_homepage: location.show_on_homepage ?? true
     });
     setIsDialogOpen(true);
@@ -147,11 +151,13 @@ const AdminLocationsPage = () => {
     }
 
     try {
-      await supabase
+      const { error } = await supabase
         .from('locations')
         .delete()
         .eq('id', id);
-      
+
+      if (error) throw error;
+
       toast({
         title: t('admin.success', 'Success', 'نجح'),
         description: t('admin.locationDeleted', 'Location deleted successfully', 'تم حذف الموقع بنجاح'),
@@ -192,7 +198,7 @@ const AdminLocationsPage = () => {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      
+
       <div className="pb-20">
         <div className="container mx-auto px-4">
           {/* Header */}
@@ -225,8 +231,6 @@ const AdminLocationsPage = () => {
                       description_en: '',
                       description_ar: '',
                       google_maps_link: '',
-                      image_url: '',
-                      images: [],
                       show_on_homepage: true
                     });
                   }}
@@ -244,7 +248,7 @@ const AdminLocationsPage = () => {
                     }
                   </DialogTitle>
                 </DialogHeader>
-                
+
                 <form onSubmit={handleSubmit} className="space-y-4">
                   <div className="grid grid-cols-2 gap-4">
                     <div>
@@ -297,28 +301,6 @@ const AdminLocationsPage = () => {
                       placeholder="https://maps.google.com/..."
                     />
                   </div>
-
-                  <div>
-                    <Label htmlFor="image_url">{t('admin.imageUrl', 'Image URL', 'رابط الصورة')}</Label>
-                    <Input
-                      id="image_url"
-                      value={formData.image_url}
-                      onChange={(e) => setFormData({...formData, image_url: e.target.value})}
-                      placeholder="https://example.com/image.jpg"
-                    />
-                  </div>
-
-                  <ImageUpload
-                    bucketName="location-images"
-                    entityType="location"
-                    onImagesChange={(imageUrls) => setFormData({
-                      ...formData, 
-                      images: imageUrls,
-                      image_url: imageUrls[0] || '' // Set the first image as the main image_url
-                    })}
-                    initialImages={formData.image_url ? [formData.image_url] : []}
-                    maxImages={1}
-                  />
 
                   <div className="flex items-center space-x-2">
                     <Checkbox
@@ -383,16 +365,6 @@ const AdminLocationsPage = () => {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-3">
-                    {location.image_url && (
-                      <img
-                        src={location.image_url}
-                        alt={isRTL ? location.name_ar : location.name_en}
-                        className="w-full h-32 object-cover rounded-md"
-                        onError={(e) => {
-                          e.currentTarget.style.display = 'none';
-                        }}
-                      />
-                    )}
                     {location.description_en && (
                       <p className={`text-muted-foreground text-sm ${isRTL ? 'text-right' : 'text-left'}`}>
                         {isRTL ? location.description_ar : location.description_en}
