@@ -43,7 +43,7 @@ export const DeveloperCredit = () => {
           </span>
 
           <Link 
-            to="https://www.facebook.com/share/14H4PLcUTJb/" 
+            to="https://www.facebook.com/profile.php?id=61579997297688" 
             target="_blank"
             className="text-[11px] text-indigo-400 hover:text-white transition-all duration-200 flex items-center gap-0.5 group font-medium"
           >
