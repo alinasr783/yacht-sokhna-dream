@@ -47,7 +47,7 @@ export const DeveloperCredit = () => {
             target="_blank"
             className="text-[11px] text-indigo-400 hover:text-white transition-all duration-200 flex items-center gap-0.5 group font-medium"
           >
-            <span className="group-hover:underline decoration-dotted underline-offset-2">ROUVIER</span>
+            <span className="group-hover:underline decoration-dotted underline-offset-2">TreuFolio</span>
             <ExternalLink className="h-3 w-3 transition-transform duration-200 group-hover:translate-y-[-1px]" />
           </Link>
         </div>
