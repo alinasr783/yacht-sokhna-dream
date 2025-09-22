@@ -24,6 +24,10 @@ localPort = 5173
 externalPort = 5173
 exposeLocalhost = true
 
+[[ports]]
+localPort = 43403
+externalPort = 3001
+
 [workflows]
 runButton = "Project"
 
@@ -46,4 +50,4 @@ args = "npm run dev"
 waitForPort = 5000
 
 [agent]
-integrations = ["javascript_database==1.0.0"]
+integrations = ["javascript_database:1.0.0"]

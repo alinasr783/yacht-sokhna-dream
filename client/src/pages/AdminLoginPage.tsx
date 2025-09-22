@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { supabase } from '@/integrations/supabase/client';
+import { auth } from '@/lib/api';
 import { useToast } from '@/hooks/use-toast';
 import { Lock, Mail, User } from 'lucide-react';
 
