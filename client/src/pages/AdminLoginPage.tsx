@@ -10,7 +10,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { auth } from '@/lib/api';
 import { useToast } from '@/hooks/use-toast';
 import { Lock, Mail, User } from 'lucide-react';
-
+import { supabase } from '@/integrations/supabase/client';
 const AdminLoginPage = () => {
   const { t, isRTL } = useLanguage();
   const [email, setEmail] = useState('');
