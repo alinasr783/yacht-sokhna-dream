@@ -1,6 +1,5 @@
 import { useLanguage } from '@/contexts/LanguageContext';
 import { ExternalLink, Code, Cpu, Binary, Sparkles } from 'lucide-react';
-import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 
 export const DeveloperCredit = () => {
@@ -42,14 +41,15 @@ export const DeveloperCredit = () => {
             {icons[currentIcon]}
           </span>
 
-          <Link 
-            to="truefolio.tech" 
+          <a 
+            href="https://truefolio.tech" 
             target="_blank"
+            rel="noopener noreferrer"
             className="text-[11px] text-indigo-400 hover:text-white transition-all duration-200 flex items-center gap-0.5 group font-medium"
           >
-            <span className="group-hover:underline decoration-dotted underline-offset-2">TreuFolio</span>
+            <span className="group-hover:underline decoration-dotted underline-offset-2">TrueFolio</span>
             <ExternalLink className="h-3 w-3 transition-transform duration-200 group-hover:translate-y-[-1px]" />
-          </Link>
+          </a>
         </div>
       </div>
     </div>
