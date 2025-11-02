@@ -34,7 +34,7 @@ export const DeveloperCredit = () => {
     >
       <div className={`flex items-center justify-center gap-1.5 ${isRTL ? 'flex-row-reverse' : ''}`}>
         <span className="text-[11px] text-gray-300">
-          {t('developer.developedBy', 'Crafted by', 'صمم بواسطة')}
+          {t('developer.developedBy', 'Developed by', 'تم تطويره بواسطة')}
         </span>
 
         <div className="flex items-center gap-1">
